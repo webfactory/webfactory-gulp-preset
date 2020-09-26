@@ -20,6 +20,7 @@ $.sass.compiler = require('node-sass');
 const { scripts } = require('./webfactory-gulp-preset/tasks/scripts');
 const { styles } = require('./webfactory-gulp-preset/tasks/styles');
 const { stylelint } = require('./webfactory-gulp-preset/tasks/stylelint');
+const { browsersync } = require('./webfactory-gulp-preset/tasks/browsersync');
 
 function js(cb) {
     scripts(gulp, $, config);
@@ -36,11 +37,17 @@ function lintsass(cb) {
     cb();
 }
 
+function serve(cb) {
+    browsersync(gulp, $, config, css, js);
+    cb();
+}
+
 exports.js = js;
 exports.css = css;
 exports.stylelint = lintsass;
+exports.serve = serve;
 exports.compile = gulp.parallel(css, js);
-exports.default = gulp.parallel(css, js);
+exports.default = gulp.series(gulp.parallel(css, js), serve);
 ```
 
 ## Example for a project-specific config (`gulp-config.js`)
@@ -60,7 +67,8 @@ module.exports = {
                 ],
                 destDir: 'js'
             }
-        ]
+        ],
+         watch: ['src/assets/js/**/*.js'],
     },
     styles: {
         files: [
@@ -72,6 +80,7 @@ module.exports = {
                 destDir: 'css'
             }
         ],
+        watch: ['src/assets/scss/**/*.scss'],
         postCssPlugins: postCssPlugins
     },
     stylelint: {
