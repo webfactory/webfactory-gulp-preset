@@ -1,7 +1,7 @@
 function styles(gulp, $, config) {
     // take the array and map over each script config object in it
     const tasks = config.styles.files.map((stylesheet) => {
-        let func =  (done) => {
+        let func = (done) => {
             const sourceFiles = (stylesheet.files || []).map(f => `${f}`);
             if (sourceFiles.length === 0) {
                 done();
@@ -29,7 +29,7 @@ function styles(gulp, $, config) {
 
         // rename the func() to the name of the target file from the config, e.g. "main.js";
         // the new name will be logged to the console when the outer gulp task runs
-        Object.defineProperty(func, 'name', {value: stylesheet.name, configurable: true});
+        Object.defineProperty(func, 'name', { value: stylesheet.name, configurable: true });
 
         return func;
     })
