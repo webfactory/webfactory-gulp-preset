@@ -8,7 +8,7 @@ webfactory-gulp-preset assumes that `gulpfile.js` and a `gulp-config.js` are loc
 
 ```js
 const gulp = require('gulp');
-const $ = require('./webfactory-gulp-preset/plugins')(); /// lädt alle gulp-*-Module in $.*
+const $ = require('./webfactory-gulp-preset/plugins')(); // loads all gulp-* modules in $.* for easy reference
 
 const config = require('./gulp-config');
 
