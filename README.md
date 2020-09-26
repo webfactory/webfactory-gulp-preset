@@ -1,6 +1,6 @@
 # webfactory-gulp-preset
 
-## Ordnerstruktur
+## Folder structure
 
 webfactory-gulp-preset assumes that `gulpfile.js` and a `gulp-config.js` are located in the project's root folder. 
 
