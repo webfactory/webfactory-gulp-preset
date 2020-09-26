@@ -12,9 +12,9 @@ const $ = require('./webfactory-gulp-preset/plugins')(); /// lädt alle gulp-*-M
 
 const config = require('./gulp-config');
 
-// Deklariere Sass compiler explizit – node-sass ist zwar aktuell default, aber so sind wir
-// future-compatible falls sich das ändern sollte;
-// die neue Sass Referenz-Implementierung ist dart-sass (https://github.com/sass/dart-sass)!
+// Explicitly declare the Sass compiler – node-sass is the current default compiler in gulp-sass,
+// but we want to be future-compatible in case this changes;
+// fyi: the new canonical Sass Implementation is dart-sass (https://github.com/sass/dart-sass)
 $.sass.compiler = require('node-sass');
 
 const { scripts } = require('./webfactory-gulp-preset/tasks/scripts');
@@ -44,6 +44,7 @@ exports.default = gulp.parallel(css, js);
 ```
 
 ## Example for a project-specific config (`gulp-config.js`)
+
 ```js
 // roll your own function if you need to use more or different plugins
 const { postCssPlugins } = require('./webfactory-gulp-preset/config/postcss-plugins-default');
