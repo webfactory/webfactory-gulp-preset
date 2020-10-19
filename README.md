@@ -8,7 +8,7 @@ webfactory-gulp-preset assumes that `gulpfile.js` and a `gulp-config.js` are loc
 
 ```js
 const gulp = require('gulp');
-const $ = require('./webfactory-gulp-preset/plugins')(); // loads all gulp-* modules in $.* for easy reference
+const $ = require('./node_modules/webfactory-gulp-preset/plugins')(); // loads all gulp-* modules in $.* for easy reference
 
 const config = require('./gulp-config');
 
@@ -17,10 +17,9 @@ const config = require('./gulp-config');
 // fyi: the new canonical Sass Implementation is dart-sass (https://github.com/sass/dart-sass)
 $.sass.compiler = require('node-sass');
 
-const { scripts } = require('./webfactory-gulp-preset/tasks/scripts');
-const { styles } = require('./webfactory-gulp-preset/tasks/styles');
-const { stylelint } = require('./webfactory-gulp-preset/tasks/stylelint');
-const { browsersync } = require('./webfactory-gulp-preset/tasks/browsersync');
+const { scripts } = require('./node_modules/webfactory-gulp-preset/tasks/scripts');
+const { styles } = require('./node_modules/webfactory-gulp-preset/tasks/styles');
+const { browsersync } = require('./node_modules/webfactory-gulp-preset/tasks/browsersync');
 
 function js(cb) {
     scripts(gulp, $, config);
@@ -32,11 +31,6 @@ function css(cb) {
     cb();
 }
 
-function lintsass(cb) {
-    stylelint(gulp, $, config);
-    cb();
-}
-
 function serve(cb) {
     browsersync(gulp, $, config, css, js);
     cb();
@@ -44,7 +38,6 @@ function serve(cb) {
 
 exports.js = js;
 exports.css = css;
-exports.stylelint = lintsass;
 exports.serve = serve;
 exports.compile = gulp.parallel(css, js);
 exports.default = gulp.series(gulp.parallel(css, js), serve);
@@ -53,8 +46,10 @@ exports.default = gulp.series(gulp.parallel(css, js), serve);
 ## Example for a project-specific config (`gulp-config.js`)
 
 ```js
+const argv = require('minimist')(process.argv.slice(2));
+
 // roll your own function if you need to use more or different plugins
-const { postCssPlugins } = require('./webfactory-gulp-preset/config/postcss-plugins-default');
+const { postCssPlugins } = require('./node_modules/webfactory-gulp-preset/config/postcss-plugins-default');
 
 module.exports = {
     scripts: {
@@ -63,36 +58,37 @@ module.exports = {
                 name: 'main.js',
                 files: [
                     '../node_modules/lazysizes/lazysizes.min.js',
-                    '../src/assets/js/my-cool-interactive-feature.js',
+                    'PATH_TO_PROJECT_ASSETS_DIR/js/my-cool-interactive-feature.js',
                 ],
                 destDir: 'js'
             }
         ],
-         watch: ['src/assets/js/**/*.js'],
+         watch: ['PATH_TO_PROJECT_ASSETS_DIR/assets/js/**/*.js'],
     },
     styles: {
         files: [
             {
                 name: 'main.css',
                 files: [
-                    '../src/assets/scss/main.scss',
+                    'PATH_TO_PROJECT_ASSETS_DIR/scss/main.scss',
                 ],
                 destDir: 'css'
             }
         ],
-        watch: ['src/assets/scss/**/*.scss'],
+        watch: ['PATH_TO_PROJECT_ASSETS_DIR/scss/**/*.scss'],
         postCssPlugins: postCssPlugins
     },
     stylelint: {
         files: [
-            '../src/assets/scss/**/*.scss'
+            'PATH_TO_PROJECT_ASSETS_DIR/scss/**/*.scss'
         ],
-        destDir: 'src/assets/scss'
+        destDir: 'PATH_TO_PROJECT_ASSETS_DIR/scss'
     },
 
-    'webdir': 'dist',
-    'npmdir': './node_modules',
-
-    'development': true
+    "development": (argv.env || process.env.APP_ENV || 'development') === 'development',
+    "webdir": "www",
+    "libdir": "vendor", // composer deps directory, might be called "lib"
+    "tempdir": "tmp",
+    "npmdir": "node_modules"
 }
 ```
