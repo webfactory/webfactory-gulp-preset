@@ -24,6 +24,10 @@ function scripts(gulp, $, config) {
         return func;
     })
 
+    if (tasks.length === 0) {
+        return;
+    }
+
     return gulp.parallel(...tasks)();
 }
 
