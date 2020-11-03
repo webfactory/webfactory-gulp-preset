@@ -4,6 +4,21 @@
 
 webfactory-gulp-preset assumes that `gulpfile.js` and a `gulp-config.js` are located in the project's root folder. 
 
+## Example for minimal dependencies (`package.json`)
+
+```json
+{
+  "private": true,
+  "dependencies": {
+    "browserslist-config-webfactory": "^1.1.0",
+    "webfactory-gulp-preset": "^1.0.4"
+  },
+  "browserslist": [
+    "extends browserslist-config-webfactory/default"
+  ]
+}
+```
+
 ## Example Gulpfile (`gulpfile.js`)
 
 ```js
