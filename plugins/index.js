@@ -6,7 +6,8 @@ module.exports = function() {
     $['browserSync'] = require('browser-sync').create();
     $['log'] = require('fancy-log');
     $['path'] = require('path');
-    $['postcssurl'] = require("postcss-url");
+    $['postcssurl'] = require('postcss-url');
+    $['purgecss'] = require('@fullhuman/postcss-purgecss');
     $['through2'] = require('through2');
 
     return $;
