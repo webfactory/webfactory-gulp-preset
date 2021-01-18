@@ -2,10 +2,8 @@ const $ = require('../plugins')(); /// load all gulp-*-Modules in $.*
 
 // This custom extractor will also match selectors that contain
 // special chars like "_", ":", "\" and "@"
-class UtilityCssExtractor {
-    static extract(content) {
-        return content.match(/[a-zA-Z0-9-_:@\/]+/g)
-    }
+function utilityCssExtractor(content) {
+    return content.match(/[a-zA-Z0-9-_:@\/]+/g)
 }
 
 function postCssPlugins(config, stylesheet) {
@@ -28,7 +26,7 @@ function postCssPlugins(config, stylesheet) {
             content: purgeCssConfig.content,
             extractors: [
                 {
-                    extractor: UtilityCssExtractor,
+                    extractor: utilityCssExtractor,
                     extensions: ['twig', 'js']
                 }
             ],
