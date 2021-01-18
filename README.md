@@ -107,3 +107,41 @@ module.exports = {
     "npmdir": "node_modules"
 }
 ```
+
+### Additional config options
+
+#### PurgeCSS
+
+[PurgeCSS](https://purgecss.com/) is a tool to automatically remove unused CSS. webfactory-gulp-preset comes with 
+postcss-purgecss preinstalled, but it is only activated if a `purgeCss` object is defined as a property of the 
+`styles` object in `gulp-config.js`.
+
+All documented options (for the PostCSS implementation) are supported. 
+
+Example (excerpt from `gulp-config.js`):
+
+```js
+// […]
+styles: {
+    files: [
+        {
+            name: 'main.css',
+            files: [
+                'PATH_TO_PROJECT_ASSETS_DIR/scss/main.scss',
+            ],
+            destDir: 'css'
+        }
+    ],
+    purgeCss: {
+        content: [
+            './src/PROJECT_TEMPLATES/**/*.twig',
+            './src/JS_COMPONENTS_THAT_USE_CSS_SELECTORS/**/*.js',
+            './vendor/PACKAGE/TEMPLATES/**/*.twig',
+        ],
+        safelist: ['ANY_VALID_CSS_SELECTOR']
+    },
+    postCssPlugins: postCssPlugins,
+    watch: ['src/**/*.scss']
+},
+// […]
+```
