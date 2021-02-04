@@ -110,6 +110,26 @@ module.exports = {
 
 ### Additional config options
 
+#### Custom include paths for SCSS
+
+You can optionally pass include paths directly as a property of the `styles` object  in `gulp-config.js` if you need more than the default `[config.npmdir]`:
+
+Example (excerpt from `gulp-config.js`):
+
+```js
+// […]
+styles: {
+    files: [
+        …
+    ],
+    includePaths: ['PATH_TO_DEPENDENCIES_1', 'PATH_TO_DEPENDENCIES_2'],
+    postCssPlugins: postCssPlugins,
+    watch: ['src/**/*.scss']
+},
+// […]
+```
+
+
 #### PurgeCSS
 
 [PurgeCSS](https://purgecss.com/) is a tool to automatically remove unused CSS. webfactory-gulp-preset comes with 
