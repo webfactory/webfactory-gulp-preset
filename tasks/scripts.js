@@ -10,6 +10,7 @@ function scripts(gulp, $, config) {
 
             return gulp.src(sourceFiles, { cwd: config.webdir })
                 .pipe(config.development ? $.sourcemaps.init() : $.through2.obj())
+                .pipe(script.convertToES5 ? $.babel({ presets: ['@babel/preset-env'] }) : $.through2.obj())
                 .pipe($.terser())
                 .pipe($.concat(script.name))
                 .pipe(config.development ? $.sourcemaps.write('.') : $.through2.obj())
