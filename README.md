@@ -72,7 +72,7 @@ module.exports = {
             {
                 name: 'main.js',
                 files: [
-                    '../node_modules/lazysizes/lazysizes.min.js',
+                    '../node_modules/some-cool-package/cool-package.min.js',
                     'PATH_TO_PROJECT_ASSETS_DIR/js/my-cool-interactive-feature.js',
                 ],
                 destDir: 'js'
@@ -108,7 +108,9 @@ module.exports = {
 }
 ```
 
-### Additional config options
+## Additional config options
+
+### SCSS/CSS pipeline
 
 #### Custom include paths for SCSS
 
@@ -162,6 +164,39 @@ styles: {
     },
     postCssPlugins: postCssPlugins,
     watch: ['src/**/*.scss']
+},
+// […]
+```
+
+
+### JS pipeline
+
+#### Convert ("transcompile") modern JavaScript to backwards compatible ES5 for older browsers
+
+[Babel](https://babeljs.io/) is a toolchain that is mainly used to convert ECMAScript 2015+ code into a backwards 
+compatible version of JavaScript in current and older browsers or environments. webfactory-gulp-preset comes with
+Babel preinstalled and preconfigured with the default `@babel/preset-env` preset. 
+
+**Please note:** To save precious compile time, the Babel step is not run by default. Set `convertToES5` to `true` in 
+the config object of the JS files you want to transcompile back down to ES5.
+
+Example (excerpt from `gulp-config.js`):
+
+```js
+// […]
+scripts: {
+    files: [
+        {
+            name: 'script-for-old-browsers.js',
+            files: [
+                '../node_modules/some-cool-package/cool-package.min.js',
+                'PATH_TO_PROJECT_ASSETS_DIR/js/my-cool-interactive-feature.js',
+            ],
+            convertToES5: true,
+            destDir: 'js'
+        }
+    ],
+    watch: ['…']
 },
 // […]
 ```
