@@ -1,4 +1,7 @@
 function scripts(gulp, $, config) {
+    const argv = require('minimist')(process.argv.slice(2));
+    let terserDisabled = argv.terser === false;
+
     // take the array and map over each script config object in it
     const tasks = config.scripts.files.map((script) => {
         let func = (done) => {
@@ -11,7 +14,7 @@ function scripts(gulp, $, config) {
             return gulp.src(sourceFiles, { cwd: config.webdir })
                 .pipe(config.development ? $.sourcemaps.init() : $.through2.obj())
                 .pipe(script.convertToES5 ? $.babel({ presets: ['@babel/preset-env'] }) : $.through2.obj())
-                .pipe($.terser())
+                .pipe(!terserDisabled ? $.terser() : $.through2.obj())
                 .pipe($.concat(script.name))
                 .pipe(config.development ? $.sourcemaps.write('.') : $.through2.obj())
                 .pipe(gulp.dest(`${config.webdir}/${script.destDir}`))

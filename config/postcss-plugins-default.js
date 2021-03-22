@@ -1,4 +1,5 @@
 const $ = require('../plugins')(); /// load all gulp-*-Modules in $.*
+const argv = require('minimist')(process.argv.slice(2));
 
 // This custom extractor will also match selectors that contain
 // special chars like "_", ":", "\" and "@"
@@ -11,6 +12,12 @@ function postCssPlugins(config, stylesheet) {
     // always prefers a stylesheet-specific one over a global config for all CSS files
     let purgeCssConfig = stylesheet.purgeCss || config.styles.purgeCss;
 
+    // Check for CLI flags/args
+    let purgeCssDisabled = argv.purgecss === false;
+
+    // Determine if PurgeCSS should run
+    let purgeCss = purgeCssConfig && !purgeCssDisabled;
+
     return [
         $.autoprefixer(),
         $.postcssurl({
@@ -22,7 +29,7 @@ function postCssPlugins(config, stylesheet) {
             }
         }),
         // conditionally run PurgeCSS if any config (local or global) was found
-        purgeCssConfig ? $.purgecss({
+        purgeCss ? $.purgecss({
             content: purgeCssConfig.content,
             extractors: [
                 {
