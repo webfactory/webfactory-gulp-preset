@@ -10,5 +10,8 @@ module.exports = function() {
     $['purgecss'] = require('@fullhuman/postcss-purgecss');
     $['through2'] = require('through2');
 
+    // from v5.0.0 onwards, gulp-sass requires the sass compiler to be passed when instantiating the function
+    $['sass'] = require('gulp-sass')(require('node-sass'));
+
     return $;
 }
