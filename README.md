@@ -23,9 +23,9 @@ webfactory-gulp-preset assumes that `gulpfile.js` and a `gulp-config.js` are loc
 
 ```js
 const gulp = require('gulp');
-const $ = require('./node_modules/webfactory-gulp-preset/plugins')(); // loads all gulp-* modules in $.* for easy reference
-
 const config = require('./gulp-config');
+const $ = require('./node_modules/webfactory-gulp-preset/plugins')(config); // loads all gulp-* modules in $.* for easy reference
+
 
 const { scripts } = require('./node_modules/webfactory-gulp-preset/tasks/scripts');
 const { styles } = require('./node_modules/webfactory-gulp-preset/tasks/styles');
@@ -107,9 +107,28 @@ module.exports = {
 
 ### SCSS/CSS pipeline
 
+#### Choose the Sass compiler
+
+For backwards-compatibility reasons, the default compiler is LibSass via node-sass, [which has been deprecated by the Sass project](https://sass-lang.com/blog/libsass-is-deprecated). You can pick the canonical implementation (Dart Sass) by setting `sassCompiler` on the `styles` object in `gulp-config.js`. You will need to install the Dart Sass Node package via npm or yarn (`npm install sass` or `yarn add sass`).
+
+Example (excerpt from `gulp-config.js`):
+
+```js
+// […]
+styles: {
+    files: [
+        …
+    ],
+    sassCompiler: 'sass', // this passes Dart Sass to gulp-sass
+    postCssPlugins: postCssPlugins,
+    watch: ['src/**/*.scss']
+},
+// […]
+```
+
 #### Custom include paths for SCSS
 
-You can optionally pass include paths directly as a property of the `styles` object  in `gulp-config.js` if you need more than the default `[config.npmdir]`:
+You can optionally pass include paths directly as a property of the `styles` object in `gulp-config.js` if you need more than the default `[config.npmdir]`:
 
 Example (excerpt from `gulp-config.js`):
 

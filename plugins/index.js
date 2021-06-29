@@ -4,7 +4,7 @@ module.exports = function() {
         // we use postRequireTransforms to do this when it has already been initialized by gulp-load-plugins
         postRequireTransforms: {
             sass: function(sass) {
-                return sass(require('node-sass'));
+                return sass(require(config.styles.sassCompiler ? config.styles.sassCompiler : 'node-sass'));
             }
         }
     });
