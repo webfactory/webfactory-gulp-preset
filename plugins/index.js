@@ -1,10 +1,16 @@
-module.exports = function() {
+module.exports = function(config) {
     const $ = require('gulp-load-plugins')({
         // from v5.0.0 onwards, gulp-sass requires the sass compiler to be passed when instantiating the function;
         // we use postRequireTransforms to do this when it has already been initialized by gulp-load-plugins
         postRequireTransforms: {
             sass: function(sass) {
-                return sass(require(config.styles.sassCompiler ? config.styles.sassCompiler : 'node-sass'));
+                let sassCompiler = 'node-sass';
+
+                if (config && config.styles && config.styles.sassCompiler) {
+                    sassCompiler = config.styles.sassCompiler;
+                }
+
+                return sass(require(sassCompiler));
             }
         }
     });
