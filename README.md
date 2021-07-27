@@ -185,7 +185,50 @@ styles: {
 
 ### JS pipeline
 
-#### Convert ("transcompile") modern JavaScript to backwards compatible ES5 for older browsers
+#### Use Webpack to bundle JavaScript modules
+
+From version 2.2 onwards, webfactory-gulp-preset offers a Webpack task that can be invoked **instead of** the "old" way
+of concatenating all JS files listed in an array of input paths. The Webpack task can be configured with multiple entry 
+points and supports Svelte Apps and backwards-compatible builds with Babel out of the box.
+
+If you want to use Webpack, require the corrensponding task and call it in the JS function in your Gulpfile instead of
+the old "scripts" (if you do it this way, `gulp js` will continue to work as before but now trigger Webpack):
+
+```js
+const { webpack } = require('./node_modules/webfactory-gulp-preset/tasks/webpack');
+
+function js(cb) {
+    webpack(gulp, $, config);
+    cb();
+}
+```
+
+The scripts object in `gulp-config.js` needs to be adapted as follows:
+
+```js
+// […]
+scripts: {
+    files: [
+        {
+            name: 'scripts',
+            inputPath: 'bundles/app/js/scripts.js',
+            destDir: 'js'
+        },
+        {
+            name: 'polyfills',
+            inputPath: 'bundles/app/js/object-fit-polyfill.js',
+            destDir: 'js'
+        },
+    ],
+    watch: ['…']
+},
+// […]
+```
+
+`scripts.js` should have top-level `import` statements to your JS modules/components, which can in turn contain further
+`import` statements to their respective dependencies.
+
+#### [does not apply to Webpack] Convert ("transcompile") modern JavaScript to backwards compatible ES5 for older browsers
 
 [Babel](https://babeljs.io/) is a toolchain that is mainly used to convert ECMAScript 2015+ code into a backwards 
 compatible version of JavaScript in current and older browsers or environments. webfactory-gulp-preset comes with
