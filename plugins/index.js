@@ -23,6 +23,8 @@ module.exports = function(config) {
     $['postcssurl'] = require('postcss-url');
     $['purgecss'] = require('@fullhuman/postcss-purgecss');
     $['through2'] = require('through2');
+    $['webpack'] = require('webpack');
+    $['webpackStream'] = require('webpack-stream');
 
     return $;
 }

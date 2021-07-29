@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.1
+
+- [fixed] Provide Webpack and plugins in $
+
 ## 2.2.0
 
 - [added] New task for JavaScript bundling with Webpack (optional)
