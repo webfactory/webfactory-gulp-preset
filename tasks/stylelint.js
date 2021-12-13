@@ -7,7 +7,7 @@ function stylelint(gulp, $, config) {
             ],
             fix: true
         }))
-        .pipe(gulp.dest(config.stylelint.destDir));
+        .pipe(gulp.dest(`${config.webdir}/${config.stylelint.destDir}`));
 }
 
 exports.stylelint = stylelint;
