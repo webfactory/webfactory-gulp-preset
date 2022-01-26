@@ -14,6 +14,7 @@ function styles(gulp, $, config) {
                     cwd: config.webdir,
                     pipeStdout: true,
                     sassOutputStyle: 'nested',
+                    importer: require('node-sass-import'),
                     includePaths: config.styles.includePaths ? config.styles.includePaths : [config.npmdir]
                 }).on('error', $.sass.logError))
                 .pipe($.postcss(config.styles.postCssPlugins(config, stylesheet)))
