@@ -2,9 +2,9 @@ const $ = require('../plugins')(); /// load all gulp-*-Modules in $.*
 const argv = require('minimist')(process.argv.slice(2));
 
 // This custom extractor will also match selectors that contain
-// special chars like "_", ":", "\" and "@"
+// special chars like "_", ".", ":", "\" and "@"
 function utilityCssExtractor(content) {
-    return content.match(/[a-zA-Z0-9-_:@\/]+/g)
+    return content.match(/[a-zA-Z0-9-_.:@\/]+/g)
 }
 
 function postCssPlugins(config, stylesheet) {
