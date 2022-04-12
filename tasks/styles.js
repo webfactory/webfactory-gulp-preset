@@ -8,22 +8,14 @@ function styles(gulp, $, config) {
                 return;
             }
 
-            const sassIncludePaths = config.styles.includePaths ? config.styles.includePaths : [config.npmdir];
-            let sassConfig = {
-                cwd: config.webdir,
-                pipeStdout: true,
-                sassOutputStyle: 'nested',
-            };
-
-            if (!config.styles.sassCompiler || config.styles.sassCompiler !== "node-sass") {
-                sassConfig.loadPaths = sassIncludePaths;
-            } else {
-                sassConfig.includePaths = sassIncludePaths;
-            }
-
             return gulp.src(sourceFiles, { cwd: config.webdir })
                 .pipe(config.development ? $.sourcemaps.init() : $.through2.obj())
-                .pipe($.sass(sassConfig).on('error', $.sass.logError))
+                .pipe($.sass({
+                    cwd: config.webdir,
+                    pipeStdout: true,
+                    sassOutputStyle: 'nested',
+                    includePaths: config.styles.includePaths ? config.styles.includePaths : [config.npmdir]
+                }).on('error', $.sass.logError))
                 .pipe($.postcss(config.styles.postCssPlugins(config, stylesheet)))
                 .pipe($.concat(stylesheet.name))
                 .pipe($.cleanCss({
