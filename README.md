@@ -109,7 +109,7 @@ module.exports = {
 
 #### Choose the Sass compiler
 
-For backwards-compatibility reasons, the default compiler is LibSass via node-sass, [which has been deprecated by the Sass project](https://sass-lang.com/blog/libsass-is-deprecated). You can pick the canonical implementation (Dart Sass) by setting `sassCompiler` on the `styles` object in `gulp-config.js`. You will need to install the Dart Sass Node package via npm or yarn (`npm install sass` or `yarn add sass`).
+For backwards-compatibility reasons, the default compiler is LibSass via node-sass, [which has been deprecated by the Sass project](https://sass-lang.com/blog/libsass-is-deprecated). You can pick the canonical implementation (Dart Sass) by setting `sassCompiler` on the `styles` object in `gulp-config.js`. You will need to install the Dart Sass Node package via npm or yarn (`npm install sass-embedded` or `yarn add sass-embedded`).
 
 Example (excerpt from `gulp-config.js`):
 
@@ -119,7 +119,7 @@ styles: {
     files: [
         …
     ],
-    sassCompiler: 'sass', // this passes Dart Sass to gulp-sass
+    sassCompiler: 'sass-embedded', // this is an official version of Dart Sass, optimized for embedded use in NodeJS (faster compile times)
     postCssPlugins: postCssPlugins,
     watch: ['src/**/*.scss']
 },
