@@ -1,3 +1,5 @@
+const PluginError = require('plugin-error');
+
 function styles(gulp, $, config) {
     // take the array and map over each script config object in it
     const tasks = config.styles.files.map((stylesheet) => {
@@ -15,7 +17,12 @@ function styles(gulp, $, config) {
                     pipeStdout: true,
                     sassOutputStyle: 'nested',
                     includePaths: config.styles.includePaths ? config.styles.includePaths : [config.npmdir]
-                }).on('error', $.sass.logError))
+                }).on('error', function(error) {
+                    const message = new PluginError('sass', error.messageFormatted).toString();
+                    process.stderr.write(`${message}\n`);
+                    config.development ? $.through2.obj() : process.exitCode = 1;
+                    done();
+                }))
                 .pipe($.postcss(config.styles.postCssPlugins(config, stylesheet)))
                 .pipe($.concat(stylesheet.name))
                 .pipe($.cleanCss({
