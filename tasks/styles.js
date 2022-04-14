@@ -20,7 +20,7 @@ function styles(gulp, $, config) {
                 }).on('error', function(error) {
                     const message = new PluginError('sass', error.messageFormatted).toString();
                     process.stderr.write(`${message}\n`);
-                    config.development ? $.through2.obj() : process.exitCode = 1;
+                    config.livereload ? $.through2.obj() : process.exitCode = 1;
                     done();
                 }))
                 .pipe($.postcss(config.styles.postCssPlugins(config, stylesheet)))
