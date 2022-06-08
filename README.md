@@ -257,3 +257,52 @@ scripts: {
 },
 // […]
 ```
+
+### SVG optimizations
+
+From version 2.7 onwards, webfactory-gulp-preset offers a SVGMin task that can be used to optimize SVGs when they first
+enter the code base. The task uses a global SVGO configuration that takes care of the risk of ID collisions across 
+different inline SVGs (i.e. multiple references to a clip-path by the same optimized ID "a") by replacing IDs with 
+random strings. As this would generate changes every time the task is run, it is advisable to use CLI parameters to at 
+least specify the source file(s) per run (the dest path can fall back to a glob set in `gulp-config.js`).
+
+Optional CLI params:
+
+
+```js
+const {svgmin} = require("webfactory-gulp-preset/tasks/svgmin");
+
+function svgo(cb) {
+    svgmin(gulp, $, config);
+    cb();
+}
+
+exports.svgo = svgo;
+```
+
+Example (excerpt from `gulp-config.js`):
+
+```js
+// […]
+svgo: {
+    files: [
+        'bundles/app/img/**/*.svg'
+    ],
+    destDir: 'bundles/app/img',
+},
+// […]
+```
+
+Example CLI usage:
+
+```bash
+gulp svgo --src="bundles/app/img/logo.svg"
+```
+
+```bash
+gulp svgo --src="bundles/app/img/icons/*.svg"
+```
+
+```bash
+gulp svgo --src="bundles/app/img/**/*.svg"  --dest="tmp/svg-test/"
+```
