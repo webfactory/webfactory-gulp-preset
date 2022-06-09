@@ -1,6 +1,6 @@
 {
   "name": "webfactory-gulp-preset",
-  "version": "2.7.1",
+  "version": "2.8.0",
   "dependencies": {
     "@babel/core": "^7.13.8",
     "@babel/preset-env": "^7.13.8",
