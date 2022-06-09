@@ -1,10 +1,15 @@
 const argv = require('minimist')(process.argv.slice(2));
+const path = require('path');
 
-function svgmin(gulp, $, config) {
-    let sourcePath = argv.src ?? config.svgo.files;
-    let destPath = argv.dest ?? config.svgo.destDir;
+function svgmin(gulp, $) {
+    let sourcePath = argv.src ?? null;
+    let destPath = argv.dest ?? null;
 
-    return gulp.src(sourcePath, { cwd: config.webdir })
+    if (!sourcePath) {
+        throw new Error('Please specify source file(s) for SVGO via CLI parameter `--src`.');
+    }
+
+    return gulp.src(sourcePath, { base: './'})
         .pipe($.svgmin({
             full: true, // needs to be set so that the plugins list is passed directly to SVGO
             plugins: [
@@ -39,7 +44,7 @@ function svgmin(gulp, $, config) {
                 },
             ],
         }))
-        .pipe(gulp.dest(`${config.webdir}/${destPath}`));
+        .pipe(gulp.dest(() => destPath ?? '.'))
 }
 
 exports.svgmin = svgmin;
