@@ -261,13 +261,10 @@ scripts: {
 ### SVG optimizations
 
 From version 2.7 onwards, webfactory-gulp-preset offers a SVGMin task that can be used to optimize SVGs when they first
-enter the code base. The task uses a global SVGO configuration that takes care of the risk of ID collisions across 
+enter the code base. The task uses a hardwired SVGO configuration that takes care of the risk of ID collisions across 
 different inline SVGs (i.e. multiple references to a clip-path by the same optimized ID "a") by replacing IDs with 
 random strings. As this would generate changes every time the task is run, it is advisable to use CLI parameters to at 
-least specify the source file(s) per run (the dest path can fall back to a glob set in `gulp-config.js`).
-
-Optional CLI params:
-
+scope the source file(s) per run. Files are overwritten by default, but a dest path can be passed if needed.
 
 ```js
 const {svgmin} = require("webfactory-gulp-preset/tasks/svgmin");
@@ -280,29 +277,22 @@ function svgo(cb) {
 exports.svgo = svgo;
 ```
 
-Example (excerpt from `gulp-config.js`):
+**Example CLI usage:**
 
-```js
-// […]
-svgo: {
-    files: [
-        'bundles/app/img/**/*.svg'
-    ],
-    destDir: 'bundles/app/img',
-},
-// […]
-```
-
-Example CLI usage:
+The task uses root (`./`) as base for `gulp.src()`.
 
 ```bash
-gulp svgo --src="bundles/app/img/logo.svg"
+gulp svgo --src src/AppBundle/Resources/public/img/logo.svg
+gulp svgo --src www/bundles/app/img/logo.svg
+```
+
+Please note: any kind of file globbing with `*` or `**` needs to be quoted on the command line.
+
+```bash
+gulp svgo --src "src/AppBundle/Resources/public/img/icons/*.svg"
+gulp svgo --src "src/AppBundle/Resources/public/img/**/*.svg"
 ```
 
 ```bash
-gulp svgo --src="bundles/app/img/icons/*.svg"
-```
-
-```bash
-gulp svgo --src="bundles/app/img/**/*.svg"  --dest="tmp/svg-test/"
+gulp svgo --src "src/AppBundle/Resources/public/img/**/*.svg" --dest tmp/svg-test/
 ```
