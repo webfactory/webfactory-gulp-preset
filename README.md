@@ -27,12 +27,11 @@ const config = require('./gulp-config');
 const $ = require('./node_modules/webfactory-gulp-preset/plugins')(config); // loads all gulp-* modules in $.* for easy reference
 
 
-const { scripts } = require('./node_modules/webfactory-gulp-preset/tasks/scripts');
-const { styles } = require('./node_modules/webfactory-gulp-preset/tasks/styles');
+const { webpack } = require('./node_modules/webfactory-gulp-preset/tasks/webpack');const { styles } = require('./node_modules/webfactory-gulp-preset/tasks/styles');
 const { browsersync } = require('./node_modules/webfactory-gulp-preset/tasks/browsersync');
 
 function js(cb) {
-    scripts(gulp, $, config);
+    webpack(gulp, $, config);
     cb();
 }
 
@@ -65,15 +64,16 @@ module.exports = {
     scripts: {
         files: [
             {
-                name: 'main.js',
-                files: [
+                name: 'main',
+                inputPath: [
                     '../node_modules/some-cool-package/cool-package.min.js',
                     'PATH_TO_PROJECT_ASSETS_DIR/js/my-cool-interactive-feature.js',
                 ],
                 destDir: 'js'
             }
         ],
-         watch: ['PATH_TO_PROJECT_ASSETS_DIR/assets/js/**/*.js'],
+        includeModules: ['module', 'module'], // optional: transpile folder from node_modules
+        watch: ['PATH_TO_PROJECT_ASSETS_DIR/assets/js/**/*.js'],
     },
     styles: {
         files: [
