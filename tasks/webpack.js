@@ -1,5 +1,7 @@
 function webpack(gulp, $, config) {
     let entrypoints = {};
+    let includeModules = config.scripts.includeModules ? '|' + config.scripts.includeModules.join('|') : '';
+
     config.scripts.files.map((script) => {
         entrypoints[script.name] = {
             import: `/${config.webdir}/${script.inputPath}`,
@@ -24,7 +26,7 @@ function webpack(gulp, $, config) {
                 rules: [
                     {
                         test: /(\.m?js?$)|(\.svelte$)/,
-                        exclude: /node_modules\/(?!svelte)/,
+                        exclude: new RegExp('node_modules\\/(?![svelte' + includeModules + '])'),
                         use: {
                             loader: 'babel-loader',
                             options: {
