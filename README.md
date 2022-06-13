@@ -187,7 +187,7 @@ styles: {
 
 ### JS pipeline
 
-#### No Webpack to bundle JavaScript modules
+#### Don't use Webpack to bundle JavaScript modules
 
 As of Version 2.9 the Webpack task is the standard for bundling Javascript modules. The "old" way of concatenating all JS is still usable, but needs some changes to your projects `gulpfile.js` and `gulp-config.js`. 
 From version 2.2 onwards, webfactory-gulp-preset offers a Webpack task that can be invoked **instead of** the "old" way
