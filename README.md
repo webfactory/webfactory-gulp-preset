@@ -27,12 +27,12 @@ const config = require('./gulp-config');
 const $ = require('./node_modules/webfactory-gulp-preset/plugins')(config); // loads all gulp-* modules in $.* for easy reference
 
 
-const { scripts } = require('./node_modules/webfactory-gulp-preset/tasks/scripts');
+const { webpack } = require('./node_modules/webfactory-gulp-preset/tasks/webpack');
 const { styles } = require('./node_modules/webfactory-gulp-preset/tasks/styles');
 const { browsersync } = require('./node_modules/webfactory-gulp-preset/tasks/browsersync');
 
 function js(cb) {
-    scripts(gulp, $, config);
+    webpack(gulp, $, config);
     cb();
 }
 
@@ -65,15 +65,14 @@ module.exports = {
     scripts: {
         files: [
             {
-                name: 'main.js',
-                files: [
-                    '../node_modules/some-cool-package/cool-package.min.js',
-                    'PATH_TO_PROJECT_ASSETS_DIR/js/my-cool-interactive-feature.js',
+                name: 'scripts',
+                inputPath: [
+                    'PATH_TO_PROJECT_ASSETS_DIR/js/scripts.js',
                 ],
                 destDir: 'js'
             }
         ],
-         watch: ['PATH_TO_PROJECT_ASSETS_DIR/assets/js/**/*.js'],
+        watch: ['PATH_TO_PROJECT_ASSETS_DIR/assets/js/**/*.js'],
     },
     styles: {
         files: [
@@ -104,6 +103,11 @@ module.exports = {
 ```
 
 ## Additional config options
+
+### Transpile packages from `node_modules`
+Due to performance reasons, `node_modules` is excluded from transpiling by default. To ensure backwards-compatibility you can whitelist certain modules from the exclusion. To do so, add the following property to the scripts object:  
+`
+includeModules: ['module_folder_name_1', 'module_folder_name_2']`
 
 ### SCSS/CSS pipeline
 
@@ -145,7 +149,6 @@ styles: {
 // […]
 ```
 
-
 #### PurgeCSS
 
 [PurgeCSS](https://purgecss.com/) is a tool to automatically remove unused CSS. webfactory-gulp-preset comes with 
@@ -182,23 +185,23 @@ styles: {
 // […]
 ```
 
-
 ### JS pipeline
 
-#### Use Webpack to bundle JavaScript modules
+#### Don't use Webpack to bundle JavaScript modules
 
+As of Version 2.9 the Webpack task is the standard for bundling Javascript modules. The "old" way of concatenating all JS is still usable, but needs some changes to your projects `gulpfile.js` and `gulp-config.js`. 
 From version 2.2 onwards, webfactory-gulp-preset offers a Webpack task that can be invoked **instead of** the "old" way
 of concatenating all JS files listed in an array of input paths. The Webpack task can be configured with multiple entry 
 points and supports Svelte Apps and backwards-compatible builds with Babel out of the box.
 
-If you want to use Webpack, require the corrensponding task and call it in the JS function in your Gulpfile instead of
-the old "scripts" (if you do it this way, `gulp js` will continue to work as before but now trigger Webpack):
+If you dont't want to use Webpack, require the corrensponding task `sripts` and call it in the JS function in your Gulpfile instead of
+`webpack`:
 
 ```js
-const { webpack } = require('./node_modules/webfactory-gulp-preset/tasks/webpack');
+const { scripts } = require('./node_modules/webfactory-gulp-preset/tasks/scripts');
 
 function js(cb) {
-    webpack(gulp, $, config);
+    scripts(gulp, $, config);
     cb();
 }
 ```
@@ -210,8 +213,11 @@ The scripts object in `gulp-config.js` needs to be adapted as follows:
 scripts: {
     files: [
         {
-            name: 'scripts',
-            inputPath: 'bundles/app/js/scripts.js',
+            name: 'main.js',
+            files: [
+                '../node_modules/some-cool-package/cool-package.min.js',
+                'PATH_TO_PROJECT_ASSETS_DIR/js/my-cool-interactive-feature.js',
+            ],
             destDir: 'js'
         },
         {
