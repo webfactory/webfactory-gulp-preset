@@ -36,7 +36,7 @@ function svgmin(gulp, $) {
                     params: {
                         prefix: {
                             toString() {
-                                return `${Math.random().toString(36).substr(2, 9)}`;
+                                return `wf${Math.random().toString(36).substr(2, 9)}`;
                             }
                         },
                         remove: false,
