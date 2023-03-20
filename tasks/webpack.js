@@ -2,9 +2,10 @@ function webpack(gulp, $, config) {
     let entrypoints = {};
     let includeModules = config.scripts.includeModules ? '|' + config.scripts.includeModules.join('|') : '';
 
-    // merge and deduplicate arrays; [config.npmdir] is default
+    // [config.npmdir] is default
     let resolveModulesPaths = [config.npmdir];
     if (config.scripts.resolveModulesPaths) {
+        // merge and deduplicate arrays
         resolveModulesPaths = [...new Set([...(config.scripts.resolveModulesPaths), ...resolveModulesPaths])];
     }
 
