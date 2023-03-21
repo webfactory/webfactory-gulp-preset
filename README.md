@@ -104,10 +104,15 @@ module.exports = {
 
 ## Additional config options
 
+### Define custom paths for module resolving
+Webpack has defaults (like `node_modules`, for obvious reasons) for what directories should be searched when resolving modules. It's possible to pass through additional paths to the resolver; this can be helpful if you want to be able to `import` JS files from a Symfony bundle without having to supply a long and fragile relative path. To do so, add the following property to the scripts object:
+`resolveModulesPaths: ['www/bundles']`
+
+In your project's JS file you can now import relative to the symlinked folder, i.e. `import 'webfactoryembed/js/embed.esm.js';`.
+
 ### Transpile packages from `node_modules`
 Due to performance reasons, `node_modules` is excluded from transpiling by default. To ensure backwards-compatibility you can whitelist certain modules from the exclusion. To do so, add the following property to the scripts object:  
-`
-includeModules: ['module_folder_name_1', 'module_folder_name_2']`
+`includeModules: ['module_folder_name_1', 'module_folder_name_2']`
 
 ### SCSS/CSS pipeline
 

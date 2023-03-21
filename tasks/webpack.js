@@ -2,6 +2,13 @@ function webpack(gulp, $, config) {
     let entrypoints = {};
     let includeModules = config.scripts.includeModules ? '|' + config.scripts.includeModules.join('|') : '';
 
+    // [config.npmdir] is default
+    let resolveModulesPaths = [config.npmdir];
+    if (config.scripts.resolveModulesPaths) {
+        // merge and deduplicate arrays
+        resolveModulesPaths = [...new Set([...(config.scripts.resolveModulesPaths), ...resolveModulesPaths])];
+    }
+
     config.scripts.files.map((script) => {
         entrypoints[script.name] = {
             import: `/${config.webdir}/${script.inputPath}`,
@@ -21,6 +28,7 @@ function webpack(gulp, $, config) {
                 },
                 extensions: ['.mjs', '.js', '.svelte'],
                 mainFields: ['svelte', 'browser', 'module', 'main'],
+                modules: resolveModulesPaths,
             },
             module: {
                 rules: [
