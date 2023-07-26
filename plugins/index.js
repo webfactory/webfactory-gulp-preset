@@ -18,6 +18,7 @@ module.exports = function(config) {
     $['argv'] = require('minimist')(process.argv.slice(2));
     $['autoprefixer'] = require('autoprefixer');
     $['browserSync'] = require('browser-sync').create();
+    $['cssnano'] = require('cssnano');
     $['log'] = require('fancy-log');
     $['path'] = require('path');
     $['postcssurl'] = require('postcss-url');
