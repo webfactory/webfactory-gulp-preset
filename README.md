@@ -1,5 +1,15 @@
 # webfactory-gulp-preset
 
+This is a collection of useful Gulp tasks for 
+
+- linting & compiling Sass (SCSS) to CSS
+- bundling JavaScript with Webpack
+- optimizing SVG source files
+
+While almost all dependencies are declared by this package, the choice of Sass compiler is left to the project – either
+`sass-embedded` (Dart Sass, current canonical implementation, recommended) or `node-sass` need to be installed as direct
+project dependencies. 
+
 ## Folder structure
 
 webfactory-gulp-preset assumes that `gulpfile.js` and a `gulp-config.js` are located in the project's root folder.
@@ -11,7 +21,8 @@ webfactory-gulp-preset assumes that `gulpfile.js` and a `gulp-config.js` are loc
   "private": true,
   "dependencies": {
     "browserslist-config-webfactory": "^1.1.0",
-    "webfactory-gulp-preset": "^1.0.4"
+    "webfactory-gulp-preset": "^3.0.0",
+    "sass-embedded": "1.64.2"
   },
   "browserslist": [
     "extends browserslist-config-webfactory/default"
@@ -84,8 +95,9 @@ module.exports = {
                 destDir: 'css'
             }
         ],
-        watch: ['PATH_TO_PROJECT_ASSETS_DIR/scss/**/*.scss'],
-        postCssPlugins: postCssPlugins
+        postCssPlugins: postCssPlugins,
+        sassCompiler: 'sass', // this passes Dart Sass to gulp-sass
+        watch: ['PATH_TO_PROJECT_ASSETS_DIR/scss/**/*.scss']
     },
     stylelint: {
         files: [
