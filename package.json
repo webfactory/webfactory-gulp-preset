@@ -29,7 +29,6 @@
     "stylelint": "^14.1.0",
     "stylelint-config-sass-guidelines": "^9.0.1",
     "stylelint-order": "^5.0.0",
-    "svelte-loader": "^3.1.2",
     "terser": "^5.3.8",
     "through2": "^4.0.2",
     "webpack": "^5.47.0",
