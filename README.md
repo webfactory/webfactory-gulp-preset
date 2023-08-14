@@ -23,9 +23,10 @@ project dependencies.
       2. [Custom include paths for SCSS](#custom-include-paths-for-scss)
       3. [PurgeCSS](#purgecss)
    2. [JS pipeline](#js-pipeline)
-      1. [Custom paths for module resolving](#custom-paths-for-module-resolving)
-      2. [Transpile packages from `node_modules`](#transpile-packages-from-nodemodules)
-      3. [[legacy] Don't use Webpack to bundle JavaScript modules](#legacy-dont-use-webpack-to-bundle-javascript-modules)
+      1. [Svelte](#svelte)
+      2. [Custom paths for module resolving](#custom-paths-for-module-resolving)
+      3. [Transpile packages from `node_modules`](#transpile-packages-from-nodemodules)
+      4. [[legacy] Don't use Webpack to bundle JavaScript modules](#legacy-dont-use-webpack-to-bundle-javascript-modules)
          - [Convert ("transcompile") modern JavaScript to backwards compatible ES5 for older browsers](#convert-transcompile-modern-javascript-to-backwards-compatible-es5-for-older-browsers)
    3. [SVG optimizations](#svg-optimizations)
 
@@ -214,6 +215,9 @@ styles: {
 ```
 
 ### JS pipeline
+
+#### Svelte
+The Webpack Gulp task is preconfigured for compiling Svelte apps, but you need to require `svelte-loader` as a direct dependency in your project to make it work. Specify the entry point (.js file) as any other in `gulp-config.js`, and Webpack will auto-detect Svelte and know what to do.
 
 #### Custom paths for module resolving
 Webpack has defaults (like `node_modules`, for obvious reasons) for what directories should be searched when resolving modules. It's possible to pass through additional paths to the resolver; this can be helpful if you want to be able to `import` JS files from a Symfony bundle without having to supply a long and fragile relative path. To do so, add the following property to the scripts object:
