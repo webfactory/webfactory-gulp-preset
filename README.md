@@ -1,17 +1,50 @@
 # webfactory-gulp-preset
 
-## Folder structure
+This is a collection of useful Gulp tasks for 
+
+- linting & compiling Sass (SCSS) to CSS
+- bundling JavaScript with Webpack
+- optimizing SVG source files
+
+While almost all dependencies are declared by this package, the choice of Sass compiler is left to the project – either
+`sass-embedded` (Dart Sass, current canonical implementation, recommended) or `node-sass` need to be installed as direct
+project dependencies. 
+
+## Table of contents
+
+1. [Basic Setup](#basic-setup)
+   1. [Folder structure](#folder-structure)
+   2. [Minimum dependencies](#minimum-dependencies-packagejson)
+   3. [Gulpfile](#gulpfile-gulpfilejs)
+   4. [Project-specific config](#project-specific-config-gulp-configjs)
+2. [Options](#options)
+   1. [SCSS/CSS pipeline](#scsscss-pipeline)
+      1. [Choose the Sass compiler](#choose-the-sass-compiler)
+      2. [Custom include paths for SCSS](#custom-include-paths-for-scss)
+      3. [PurgeCSS](#purgecss)
+   2. [JS pipeline](#js-pipeline)
+      1. [Svelte](#svelte)
+      2. [Custom paths for module resolving](#custom-paths-for-module-resolving)
+      3. [Transpile packages from `node_modules`](#transpile-packages-from-nodemodules)
+      4. [[legacy] Don't use Webpack to bundle JavaScript modules](#legacy-dont-use-webpack-to-bundle-javascript-modules)
+         - [Convert ("transcompile") modern JavaScript to backwards compatible ES5 for older browsers](#convert-transcompile-modern-javascript-to-backwards-compatible-es5-for-older-browsers)
+   3. [SVG optimizations](#svg-optimizations)
+
+## Basic Setup
+
+### Folder structure
 
 webfactory-gulp-preset assumes that `gulpfile.js` and a `gulp-config.js` are located in the project's root folder.
 
-## Example for minimal dependencies (`package.json`)
+### Minimum dependencies (`package.json`)
 
 ```json
 {
   "private": true,
   "dependencies": {
     "browserslist-config-webfactory": "^1.1.0",
-    "webfactory-gulp-preset": "^1.0.4"
+    "webfactory-gulp-preset": "^3.0.0",
+    "sass-embedded": "1.64.2"
   },
   "browserslist": [
     "extends browserslist-config-webfactory/default"
@@ -19,7 +52,7 @@ webfactory-gulp-preset assumes that `gulpfile.js` and a `gulp-config.js` are loc
 }
 ```
 
-## Example Gulpfile (`gulpfile.js`)
+### Gulpfile (`gulpfile.js`)
 
 ```js
 const gulp = require('gulp');
@@ -53,7 +86,7 @@ exports.compile = gulp.parallel(css, js);
 exports.default = gulp.series(gulp.parallel(css, js), serve);
 ```
 
-## Example for a project-specific config (`gulp-config.js`)
+### Project-specific config (`gulp-config.js`)
 
 ```js
 const argv = require('minimist')(process.argv.slice(2));
@@ -84,8 +117,9 @@ module.exports = {
                 destDir: 'css'
             }
         ],
-        watch: ['PATH_TO_PROJECT_ASSETS_DIR/scss/**/*.scss'],
-        postCssPlugins: postCssPlugins
+        postCssPlugins: postCssPlugins,
+        sassCompiler: 'sass', // this passes Dart Sass to gulp-sass
+        watch: ['PATH_TO_PROJECT_ASSETS_DIR/scss/**/*.scss']
     },
     stylelint: {
         files: [
@@ -102,17 +136,7 @@ module.exports = {
 }
 ```
 
-## Additional config options
-
-### Define custom paths for module resolving
-Webpack has defaults (like `node_modules`, for obvious reasons) for what directories should be searched when resolving modules. It's possible to pass through additional paths to the resolver; this can be helpful if you want to be able to `import` JS files from a Symfony bundle without having to supply a long and fragile relative path. To do so, add the following property to the scripts object:
-`resolveModulesPaths: ['www/bundles']`
-
-In your project's JS file you can now import relative to the symlinked folder, i.e. `import 'webfactoryembed/js/embed.esm.js';`.
-
-### Transpile packages from `node_modules`
-Due to performance reasons, `node_modules` is excluded from transpiling by default. To ensure backwards-compatibility you can whitelist certain modules from the exclusion. To do so, add the following property to the scripts object:  
-`includeModules: ['module_folder_name_1', 'module_folder_name_2']`
+## Options
 
 ### SCSS/CSS pipeline
 
@@ -192,7 +216,20 @@ styles: {
 
 ### JS pipeline
 
-#### Don't use Webpack to bundle JavaScript modules
+#### Svelte
+The Webpack Gulp task is preconfigured for compiling Svelte apps, but you need to require `svelte-loader` as a direct dependency in your project to make it work. Specify the entry point (.js file) as any other in `gulp-config.js`, and Webpack will auto-detect Svelte and know what to do.
+
+#### Custom paths for module resolving
+Webpack has defaults (like `node_modules`, for obvious reasons) for what directories should be searched when resolving modules. It's possible to pass through additional paths to the resolver; this can be helpful if you want to be able to `import` JS files from a Symfony bundle without having to supply a long and fragile relative path. To do so, add the following property to the scripts object:
+`resolveModulesPaths: ['www/bundles']`
+
+In your project's JS file you can now import relative to the symlinked folder, i.e. `import 'webfactoryembed/js/embed.esm.js';`.
+
+#### Transpile packages from `node_modules`
+Due to performance reasons, `node_modules` is excluded from transpiling by default. To ensure backwards-compatibility you can whitelist certain modules from the exclusion. To do so, add the following property to the scripts object:  
+`includeModules: ['module_folder_name_1', 'module_folder_name_2']`
+
+#### [legacy] Don't use Webpack to bundle JavaScript modules
 
 As of Version 2.9 the Webpack task is the standard for bundling Javascript modules. The "old" way of concatenating all JS is still usable, but needs some changes to your projects `gulpfile.js` and `gulp-config.js`. 
 From version 2.2 onwards, webfactory-gulp-preset offers a Webpack task that can be invoked **instead of** the "old" way
@@ -239,7 +276,7 @@ scripts: {
 `scripts.js` should have top-level `import` statements to your JS modules/components, which can in turn contain further
 `import` statements to their respective dependencies.
 
-#### [does not apply to Webpack] Convert ("transcompile") modern JavaScript to backwards compatible ES5 for older browsers
+##### Convert ("transcompile") modern JavaScript to backwards compatible ES5 for older browsers
 
 [Babel](https://babeljs.io/) is a toolchain that is mainly used to convert ECMAScript 2015+ code into a backwards 
 compatible version of JavaScript in current and older browsers or environments. webfactory-gulp-preset comes with
