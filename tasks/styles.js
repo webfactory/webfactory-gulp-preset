@@ -18,7 +18,7 @@ function styles(gulp, $, config) {
                 }).on('error', $.sass.logError))
                 .pipe($.postcss(config.styles.postCssPlugins(config, stylesheet)))
                 .pipe($.concat(stylesheet.name))
-                .pipe($.cleanCss({ compatibility: 'ie11' }))
+                .pipe($.csso({ sourceMap: true }))
                 .pipe(config.development ? $.sourcemaps.write('.') : $.through2.obj())
                 .pipe(gulp.dest(`${config.webdir}/${stylesheet.destDir}`))
                 .pipe($.browserSync.reload({ stream: true }));
