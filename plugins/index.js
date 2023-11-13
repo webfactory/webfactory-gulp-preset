@@ -16,11 +16,11 @@ module.exports = function(config) {
     });
 
     $['argv'] = require('minimist')(process.argv.slice(2));
-    $['autoprefixer'] = require('autoprefixer');
     $['browserSync'] = require('browser-sync').create();
     $['log'] = require('fancy-log');
     $['path'] = require('path');
     $['postcssurl'] = require('postcss-url');
+    $['postcssPresetEnv'] = require('postcss-preset-env');
     $['purgecss'] = require('@fullhuman/postcss-purgecss');
     $['through2'] = require('through2');
     $['webpack'] = require('webpack');
