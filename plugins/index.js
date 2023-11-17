@@ -21,6 +21,7 @@ module.exports = function(config) {
     $['log'] = require('fancy-log');
     $['path'] = require('path');
     $['postcssurl'] = require('postcss-url');
+    $['lightningcss'] = require('postcss-lightningcss');
     $['purgecss'] = require('@fullhuman/postcss-purgecss');
     $['through2'] = require('through2');
     $['webpack'] = require('webpack');
