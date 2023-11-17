@@ -19,7 +19,7 @@ function postCssPlugins(config, stylesheet) {
     let purgeCss = purgeCssConfig && !purgeCssDisabled;
 
     return [
-        $.autoprefixer(),
+        $.postcssPresetEnv(), // includes autoprefixer
         $.postcssurl({
             url: function (asset) {
                 if (!asset.url || asset.url.indexOf("base64") !== -1) {
