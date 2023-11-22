@@ -30,7 +30,7 @@ function postCssPlugins(config, stylesheet) {
             ],
             safelist: purgeCssConfig.safelist
         }) : false,
-        $.autoprefixer(),
+        $.postcssPresetEnv(), // includes autoprefixer
         $.postcssurl({
             url: function (asset) {
                 if (!asset.url || asset.url.indexOf("base64") !== -1) {
