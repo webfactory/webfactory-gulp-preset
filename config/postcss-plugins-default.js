@@ -19,15 +19,6 @@ function postCssPlugins(config, stylesheet) {
     let purgeCss = purgeCssConfig && !purgeCssDisabled;
 
     return [
-        $.postcssPresetEnv(), // includes autoprefixer
-        $.postcssurl({
-            url: function (asset) {
-                if (!asset.url || asset.url.indexOf("base64") !== -1) {
-                    return asset.url;
-                }
-                return $.path.relative(`${config.webdir}/${stylesheet.destDir}/`, asset.absolutePath).split("\\").join("/");
-            }
-        }),
         // conditionally run PurgeCSS if any config (local or global) was found
         purgeCss ? $.purgecss({
             content: purgeCssConfig.content,
@@ -38,7 +29,16 @@ function postCssPlugins(config, stylesheet) {
                 }
             ],
             safelist: purgeCssConfig.safelist
-        }) : false
+        }) : false,
+        $.postcssPresetEnv(), // includes autoprefixer
+        $.postcssurl({
+            url: function (asset) {
+                if (!asset.url || asset.url.indexOf("base64") !== -1) {
+                    return asset.url;
+                }
+                return $.path.relative(`${config.webdir}/${stylesheet.destDir}/`, asset.absolutePath).split("\\").join("/");
+            }
+        }),
     ].filter(Boolean); // Strip falsy values (this enables conditional plugins like PurgeCSS)
 }
 
