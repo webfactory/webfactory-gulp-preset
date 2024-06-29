@@ -25,7 +25,7 @@ function postCssPlugins(config, stylesheet) {
             extractors: [
                 {
                     extractor: utilityCssExtractor,
-                    extensions: ['twig', 'js']
+                    extensions: ['php', 'twig', 'js', 'svg']
                 }
             ],
             safelist: purgeCssConfig.safelist
