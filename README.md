@@ -217,7 +217,13 @@ styles: {
 ### JS pipeline
 
 #### Svelte
-The Webpack Gulp task is preconfigured for compiling Svelte apps, but you need to require `svelte-loader` as a direct dependency in your project to make it work. Specify the entry point (.js file) as any other in `gulp-config.js`, and Webpack will auto-detect Svelte and know what to do.
+The Webpack Gulp task is preconfigured for compiling Svelte apps, but you need to require `svelte` and `svelte-loader` as a direct dependencies in your project to make it work. 
+
+Specify 
+- the `svelteVersion` as a first-level property (string or number) in `gulp-config.js`, e.g. `svelteVersion: '^4.2'`; the path to Svelte internals changed in v4 which is why the project needs to supply the Svelte version that is in use. If no `svelteVersion` is provided, this preset defaults to settings for version 3. 
+- the entry point (.js file) as any other in `gulp-config.js`, 
+
+and Webpack will auto-detect Svelte and know what to do.
 
 #### Custom paths for module resolving
 Webpack has defaults (like `node_modules`, for obvious reasons) for what directories should be searched when resolving modules. It's possible to pass through additional paths to the resolver; this can be helpful if you want to be able to `import` JS files from a Symfony bundle without having to supply a long and fragile relative path. To do so, add the following property to the scripts object:

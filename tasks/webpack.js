@@ -1,6 +1,7 @@
 function webpack(gulp, $, config) {
     let entrypoints = {};
     let includeModules = config.scripts.includeModules ? '|' + config.scripts.includeModules.join('|') : '';
+    let svelteVersion = config.svelteVersion ? parseFloat(config.svelteVersion) : 3;
 
     // [config.npmdir] is default
     let resolveModulesPaths = [config.npmdir];
@@ -24,7 +25,7 @@ function webpack(gulp, $, config) {
             },
             resolve: {
                 alias: {
-                    svelte: $.path.resolve('node_modules', 'svelte')
+                    svelte: svelteVersion < 4 ? $.path.resolve('node_modules', 'svelte') : $.path.resolve('node_modules', 'svelte/src/runtime')
                 },
                 extensions: ['.mjs', '.js', '.svelte'],
                 mainFields: ['svelte', 'browser', 'module', 'main'],
