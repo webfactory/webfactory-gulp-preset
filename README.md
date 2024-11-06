@@ -220,7 +220,7 @@ styles: {
 The Webpack Gulp task is preconfigured for compiling Svelte apps, but you need to require `svelte` and `svelte-loader` as a direct dependencies in your project to make it work. 
 
 Specify 
-- the `svelteVersion` as a first-level property (string or number) in `gulp-config.js`, e.g. `svelteVersion: '^4.2'`; the path to Svelte internals changed in v4 which is why the project needs to supply the Svelte version that is in use. If no `svelteVersion` is provided, this preset defaults to settings for version 3. 
+- the `svelteVersion` as a first-level property (string or number) in `gulp-config.js`, e.g. `svelteVersion: '4.2'` (you can supply a string or a number as long as the value can be transformed into a floating point by `parseFloat()`); the path to Svelte internals changed in v4 which is why the project needs to supply the Svelte version that is in use. If no `svelteVersion` is provided, this preset defaults to settings for version 3. 
 - the entry point (.js file) as any other in `gulp-config.js`, 
 
 and Webpack will auto-detect Svelte and know what to do.
