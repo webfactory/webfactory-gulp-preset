@@ -41,6 +41,7 @@ function webpack(gulp, $, config) {
                             options: {
                                 cacheDirectory: true,
                                 presets: ['@babel/preset-env'],
+                                plugins: ["@babel/plugin-transform-runtime"],
                             }
                         }
                     },
