@@ -15,7 +15,11 @@ function styles(gulp, $, config) {
                     pipeStdout: true,
                     sassOutputStyle: 'nested',
                     includePaths: config.styles.includePaths ? config.styles.includePaths : [config.npmdir]
-                }).on('error', $.sass.logError))
+                }).on('error', function(error) {
+                    console.error('Sass Error:', error.messageFormatted);
+                    process.exitCode = 1;
+                    this.emit('end');
+                }))
                 .pipe($.postcss(config.styles.postCssPlugins(config, stylesheet)))
                 .pipe($.concat(stylesheet.name))
                 .pipe($.cleanCss({ compatibility: 'ie11' }))
