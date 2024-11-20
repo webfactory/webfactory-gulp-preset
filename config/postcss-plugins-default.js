@@ -36,7 +36,7 @@ function postCssPlugins(config, stylesheet) {
                 if (!asset.url || asset.url.indexOf("base64") !== -1) {
                     return asset.url;
                 }
-                return $.path.relative(`${config.webdir}/${stylesheet.destDir}/`, asset.absolutePath).split("\\").join("/") + (asset.hash ? asset.hash : '');
+                return $.path.relative(`${config.webdir}/${stylesheet.destDir}/`, asset.absolutePath).split("\\").join("/") + asset.hash;
             }
         }),
     ].filter(Boolean); // Strip falsy values (this enables conditional plugins like PurgeCSS)
