@@ -36,6 +36,9 @@ function postCssPlugins(config, stylesheet) {
                 if (!asset.url || asset.url.indexOf("base64") !== -1) {
                     return asset.url;
                 }
+                if (asset.url === asset.hash) {
+                    return asset.hash;
+                }
                 return $.path.relative(`${config.webdir}/${stylesheet.destDir}/`, asset.absolutePath).split("\\").join("/") + asset.hash;
             }
         }),
