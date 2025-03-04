@@ -214,6 +214,40 @@ styles: {
 // […]
 ```
 
+#### PostCSS Preset Env
+
+PostCSS Preset Env lets us convert modern CSS into something the browsers targeted by our browserslist config can understand. We usually use default settings for PostCSS Preset Env, but you can pass a custom config by defining a `postCssPresetEnvConfig` object either on `styles` for all files or on a specific file.
+
+Example (excerpt from `gulp-config.js`):
+
+```js
+// […]
+styles: {
+    files: [
+        {
+            name: 'custom.css',
+            files: [
+                'PATH_TO_PROJECT_ASSETS_DIR/scss/custom.scss',
+            ],
+            postCssPresetEnv: {
+              // options for postcss-logical in case you need to always output CSS for a vertical writing mode… 
+              "logical": {
+                 "inlineDirection": "bottom-to-top",
+                 "blockDirection": "right-to-left"
+              },
+              // …for very old browsers 
+              browsers: [
+                 'Chrome >= 56',
+              ],
+            },
+            destDir: 'css',
+        }
+    ],
+    …
+},
+// […]
+```
+
 ### JS pipeline
 
 #### Svelte
