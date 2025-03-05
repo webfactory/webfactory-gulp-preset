@@ -18,6 +18,10 @@ function postCssPlugins(config, stylesheet) {
     // Determine if PurgeCSS should run
     let purgeCss = purgeCssConfig && !purgeCssDisabled;
 
+    // Grab a PostCSS Preset Env config to use;
+    // always prefers a stylesheet-specific one over a global config for all CSS files
+    let postCssPresetEnvConfig = stylesheet.postCssPresetEnv || config.styles.postCssPresetEnv || '';
+
     return [
         // conditionally run PurgeCSS if any config (local or global) was found
         purgeCss ? $.purgecss({
@@ -30,7 +34,7 @@ function postCssPlugins(config, stylesheet) {
             ],
             safelist: purgeCssConfig.safelist
         }) : false,
-        $.postcssPresetEnv(), // includes autoprefixer
+        $.postcssPresetEnv(postCssPresetEnvConfig), // includes autoprefixer
         $.postcssurl({
             url: function (asset) {
                 if (!asset.url || asset.url.indexOf("base64") !== -1) {
