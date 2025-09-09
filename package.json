@@ -31,6 +31,7 @@
     "stylelint-order": "^5.0.0",
     "terser": "^5.3.8",
     "through2": "^4.0.2",
+    "ts-loader": "^9.5.4",
     "webpack": "^5.47.0",
     "webpack-stream": "^7.0.0"
   },
