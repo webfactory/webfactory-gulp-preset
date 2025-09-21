@@ -13,16 +13,17 @@ function styles(gulp, $, config) {
                 .pipe($.sass({
                     cwd: config.webdir,
                     pipeStdout: true,
-                    sassOutputStyle: 'nested',
-                    includePaths: config.styles.includePaths ? config.styles.includePaths : [config.npmdir]
-                }).on('error', function(error) {
+                    style: 'expanded',
+                    importers: [new $.sass.compiler.NodePackageImporter(config.webdir)],
+                    loadPaths: config.styles.includePaths ? config.styles.includePaths : [config.npmdir]
+                }, true).on('error', function(error) {
                     console.error('Sass Error:', error.messageFormatted);
                     process.exitCode = 1;
                     this.emit('end');
                 }))
                 .pipe($.postcss(config.styles.postCssPlugins(config, stylesheet)))
                 .pipe($.concat(stylesheet.name))
-                .pipe($.cleanCss({ compatibility: 'ie11' }))
+                // .pipe($.cleanCss({ compatibility: 'ie11' }))
                 .pipe(config.development ? $.sourcemaps.write('.') : $.through2.obj())
                 .pipe(gulp.dest(`${config.webdir}/${stylesheet.destDir}`))
                 .pipe($.browserSync.reload({ stream: true }));
