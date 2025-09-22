@@ -20,6 +20,10 @@ function styles(gulp, $, config) {
                 sassConfig.includePaths = sassIncludePaths;
             }
 
+            if ($.sass.compiler.NodePackageImporter !== 'undefined') {
+                sassConfig.importers = [new $.sass.compiler.NodePackageImporter(config.webdir)];
+            }
+
             return gulp.src(sourceFiles, { cwd: config.webdir })
                 .pipe(config.development ? $.sourcemaps.init() : $.through2.obj())
                 .pipe($.sass(sassConfig).on('error', function(error) {
