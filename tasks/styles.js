@@ -8,14 +8,25 @@ function styles(gulp, $, config) {
                 return;
             }
 
+            const sassIncludePaths = config.styles.includePaths ? config.styles.includePaths : [config.npmdir];
+            let sassConfig = {
+                cwd: config.webdir,
+                style: 'expanded',
+            };
+
+            if (!config.styles.sassCompiler || config.styles.sassCompiler !== "node-sass") {
+                sassConfig.loadPaths = sassIncludePaths;
+            } else {
+                sassConfig.includePaths = sassIncludePaths;
+            }
+
+            if ($.sass.compiler.NodePackageImporter !== 'undefined') {
+                sassConfig.importers = [new $.sass.compiler.NodePackageImporter(config.webdir)];
+            }
+
             return gulp.src(sourceFiles, { cwd: config.webdir })
                 .pipe(config.development ? $.sourcemaps.init() : $.through2.obj())
-                .pipe($.sass({
-                    cwd: config.webdir,
-                    pipeStdout: true,
-                    sassOutputStyle: 'nested',
-                    includePaths: config.styles.includePaths ? config.styles.includePaths : [config.npmdir]
-                }).on('error', function(error) {
+                .pipe($.sass(sassConfig).on('error', function(error) {
                     console.error('Sass Error:', error.messageFormatted);
                     process.exitCode = 1;
                     this.emit('end');
