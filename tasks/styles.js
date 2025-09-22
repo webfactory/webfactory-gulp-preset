@@ -11,8 +11,7 @@ function styles(gulp, $, config) {
             const sassIncludePaths = config.styles.includePaths ? config.styles.includePaths : [config.npmdir];
             let sassConfig = {
                 cwd: config.webdir,
-                pipeStdout: true,
-                sassOutputStyle: 'nested',
+                style: 'expanded',
             };
 
             if (!config.styles.sassCompiler || config.styles.sassCompiler !== "node-sass") {
