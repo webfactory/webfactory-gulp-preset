@@ -1,5 +1,15 @@
 function webpack(gulp, $, config) {
     let entrypoints = {};
+    let includeModules = config.scripts.includeModules ? '|' + config.scripts.includeModules.join('|') : '';
+    let svelteVersion = config.svelteVersion ? parseFloat(config.svelteVersion) : 3;
+
+    // [config.npmdir] is default
+    let resolveModulesPaths = [config.npmdir];
+    if (config.scripts.resolveModulesPaths) {
+        // merge and deduplicate arrays
+        resolveModulesPaths = [...new Set([...(config.scripts.resolveModulesPaths), ...resolveModulesPaths])];
+    }
+
     config.scripts.files.map((script) => {
         entrypoints[script.name] = {
             import: `/${config.webdir}/${script.inputPath}`,
@@ -15,21 +25,23 @@ function webpack(gulp, $, config) {
             },
             resolve: {
                 alias: {
-                    svelte: $.path.resolve('node_modules', 'svelte')
+                    svelte: svelteVersion < 4 ? $.path.resolve('node_modules', 'svelte') : $.path.resolve('node_modules', 'svelte/src/runtime')
                 },
                 extensions: ['.mjs', '.js', '.svelte'],
                 mainFields: ['svelte', 'browser', 'module', 'main'],
+                modules: resolveModulesPaths,
             },
             module: {
                 rules: [
                     {
                         test: /(\.m?js?$)|(\.svelte$)/,
-                        exclude: /node_modules\/(?!svelte)/,
+                        exclude: new RegExp('node_modules\\/(?![svelte' + includeModules + '])'),
                         use: {
                             loader: 'babel-loader',
                             options: {
                                 cacheDirectory: true,
                                 presets: ['@babel/preset-env'],
+                                plugins: ["@babel/plugin-transform-runtime"],
                             }
                         }
                     },

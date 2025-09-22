@@ -3,7 +3,7 @@ function stylelint(gulp, $, config) {
         .pipe($.stylelint({
             failAfterError: false,
             reporters: [
-                { formatter: 'verbose', console: true }
+                { formatter: config.stylelint.formatter ? config.stylelint.formatter : 'string', console: true }
             ],
             fix: true
         }))

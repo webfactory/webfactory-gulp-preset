@@ -18,27 +18,34 @@ function postCssPlugins(config, stylesheet) {
     // Determine if PurgeCSS should run
     let purgeCss = purgeCssConfig && !purgeCssDisabled;
 
+    // Grab a PostCSS Preset Env config to use;
+    // always prefers a stylesheet-specific one over a global config for all CSS files
+    let postCssPresetEnvConfig = stylesheet.postCssPresetEnv || config.styles.postCssPresetEnv || '';
+
     return [
-        $.autoprefixer(),
-        $.postcssurl({
-            url: function (asset) {
-                if (!asset.url || asset.url.indexOf("base64") !== -1) {
-                    return asset.url;
-                }
-                return $.path.relative(`${config.webdir}/${stylesheet.destDir}/`, asset.absolutePath).split("\\").join("/");
-            }
-        }),
         // conditionally run PurgeCSS if any config (local or global) was found
         purgeCss ? $.purgecss({
             content: purgeCssConfig.content,
             extractors: [
                 {
                     extractor: utilityCssExtractor,
-                    extensions: ['twig', 'js']
+                    extensions: ['php', 'twig', 'js', 'svg']
                 }
             ],
             safelist: purgeCssConfig.safelist
-        }) : false
+        }) : false,
+        $.postcssPresetEnv(postCssPresetEnvConfig), // includes autoprefixer
+        $.postcssurl({
+            url: function (asset) {
+                if (!asset.url || asset.url.indexOf("base64") !== -1) {
+                    return asset.url;
+                }
+                if (asset.url === asset.hash) {
+                    return asset.hash;
+                }
+                return $.path.relative(`${config.webdir}/${stylesheet.destDir}/`, asset.absolutePath).split("\\").join("/") + asset.hash;
+            }
+        }),
     ].filter(Boolean); // Strip falsy values (this enables conditional plugins like PurgeCSS)
 }
 
