@@ -22,6 +22,13 @@ function stylepack(gulp, $, config) {
             module: {
                 rules: [
                     {
+                        test: /\.(png|jpe?g|gif|svg|webp|avif)$/i,
+                        type: 'asset/resource',
+                        generator: {
+                            filename: 'img/[name].[hash][ext]'
+                        }
+                    },
+                    {
                         test: /\.s[ac]ss$/i,
                         use: [
                             {
@@ -32,6 +39,12 @@ function stylepack(gulp, $, config) {
                                 loader: 'css-loader',
                                 options: {
                                     sourceMap: true,
+                                }
+                            },
+                            {
+                                loader: 'resolve-url-loader',
+                                options: {
+                                    debug: true,
                                 }
                             },
                             {
