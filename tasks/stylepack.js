@@ -50,6 +50,7 @@ function stylepack(gulp, $, config) {
                             {
                                 loader: "postcss-loader",
                                 options: {
+                                    sourceMap: true,
                                     postcssOptions: {
                                         plugins: [
                                             [
