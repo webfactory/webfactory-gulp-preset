@@ -48,6 +48,18 @@ function stylepack(gulp, $, config) {
                                 }
                             },
                             {
+                                loader: "postcss-loader",
+                                options: {
+                                    postcssOptions: {
+                                        plugins: [
+                                            [
+                                                "postcss-preset-env",
+                                            ],
+                                        ],
+                                    },
+                                },
+                            },
+                            {
                                 loader: 'sass-loader',
                                 options: {
                                     implementation: 'sass-embedded',
