@@ -1,4 +1,22 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const postcssPurgecss = require("@fullhuman/postcss-purgecss")({
+    content: [
+        './src/**/*.html',
+    ],
+    extractors: [
+        {
+            extractor: utilityCssExtractor,
+            extensions: ['php', 'twig', 'js', 'svg']
+        }
+    ],
+    safelist: [/^is-/, /^js-/] // adapt to classes you must keep
+});
+
+// This custom extractor will also match selectors that contain
+// special chars like "_", ".", ":", "\" and "@"
+function utilityCssExtractor(content) {
+    return content.match(/[a-zA-Z0-9-_.:@\/]+/g)
+}
 
 function stylepack(gulp, $, config) {
     let entrypoints = {};
@@ -53,9 +71,8 @@ function stylepack(gulp, $, config) {
                                     sourceMap: true,
                                     postcssOptions: {
                                         plugins: [
-                                            [
-                                                "postcss-preset-env",
-                                            ],
+                                            ["postcss-preset-env"],
+                                            postcssPurgecss,
                                         ],
                                     },
                                 },
