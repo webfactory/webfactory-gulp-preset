@@ -54,9 +54,6 @@ function stylepack(gulp, $, config) {
                             },
                             {
                                 loader: 'resolve-url-loader',
-                                options: {
-                                    debug: true,
-                                }
                             },
                             {
                                 loader: "postcss-loader",
@@ -86,7 +83,6 @@ function stylepack(gulp, $, config) {
                                     api: 'modern',
                                     sourceMap: true,
                                     sassOptions: {
-                                        // importers: new NodePackageImporter(),
                                         loadPaths: config.styles.includePaths ? config.styles.includePaths : [config.npmdir]
                                     },
                                 },
