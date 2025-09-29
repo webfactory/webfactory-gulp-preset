@@ -1,16 +1,9 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const postcssPurgecss = require("@fullhuman/postcss-purgecss")({
-    content: [
-        './src/**/*.html',
-    ],
-    extractors: [
-        {
-            extractor: utilityCssExtractor,
-            extensions: ['php', 'twig', 'js', 'svg']
-        }
-    ],
-    safelist: [/^is-/, /^js-/] // adapt to classes you must keep
-});
+const postcssPurgecss = require("@fullhuman/postcss-purgecss");
+const argv = require('minimist')(process.argv.slice(2));
+const webpackStream = require('webpack-stream');
+const mergeStream = require('merge-stream');
+const path = require('path');
 
 // This custom extractor will also match selectors that contain
 // special chars like "_", ".", ":", "\" and "@"
@@ -19,21 +12,22 @@ function utilityCssExtractor(content) {
 }
 
 function stylepack(gulp, $, config) {
-    let entrypoints = {};
 
-    config.styles.files.map((file) => {
-        entrypoints[file.name] = {
-            import: `/${config.webdir}/${file.files}`,
-            filename: file.destDir ? `webpack-tmp/${file.destDir}/[name]` : 'webpack-tmp/[name]'
-        };
-    });
+    const streams = config.styles.files.map((file) => {
+        let purgeCssConfig = config.styles.purgeCss;
 
-    return gulp.src(config.webdir + '/**/scss/**/*.scss')
-        .pipe($.webpackStream({
-            entry: entrypoints,
-            // output: {
-            //     filename: `[name]`,
-            // },
+        // Check for CLI flags/args
+        let purgeCssDisabled = argv.purgecss === false;
+
+        // Determine if PurgeCSS should run
+        let purgeCss = purgeCssConfig && !purgeCssDisabled;
+
+        const webpackConfig = {
+            entry: `/${config.webdir}/${file.files}`,
+            output: {
+                // path: path.resolve(__dirname, 'webpack-tmp', file.destDir || ''),
+                filename: `webpack-tmp/${file.name}`,
+            },
             resolve: {
                 mainFields: ['browser', 'module', 'main'],
             },
@@ -51,7 +45,6 @@ function stylepack(gulp, $, config) {
                         use: [
                             {
                                 loader: MiniCssExtractPlugin.loader,
-                                options: {},
                             },
                             {
                                 loader: 'css-loader',
@@ -72,8 +65,17 @@ function stylepack(gulp, $, config) {
                                     postcssOptions: {
                                         plugins: [
                                             ["postcss-preset-env"],
-                                            postcssPurgecss,
-                                        ],
+                                            purgeCss ? postcssPurgecss({
+                                                content: purgeCssConfig.content,
+                                                extractors: [
+                                                    {
+                                                        extractor: utilityCssExtractor,
+                                                        extensions: ['php', 'twig', 'js', 'svg']
+                                                    }
+                                                ],
+                                                safelist: purgeCssConfig.safelist,
+                                            }) : false,
+                                        ].filter(Boolean),
                                     },
                                 },
                             },
@@ -95,7 +97,7 @@ function stylepack(gulp, $, config) {
             },
             plugins: [
                 new MiniCssExtractPlugin({
-                    filename: "css/[name]",
+                    filename: `${file.destDir}/${file.name}`,
                 }),
             ],
             mode: config.development && $.argv.prod !== true ? 'development' : 'production',
@@ -104,8 +106,13 @@ function stylepack(gulp, $, config) {
                 preset: 'normal',
                 timings: true
             },
-        }, $.webpack))
-        .pipe(gulp.dest(config.webdir))
+        };
+
+        return webpackStream(webpackConfig)
+            .pipe(gulp.dest(path.join(config.webdir)));
+    });
+
+    return mergeStream(...streams)
         .pipe($.browserSync.reload({ stream: true }));
 }
 
