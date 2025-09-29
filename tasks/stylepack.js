@@ -14,13 +14,14 @@ function utilityCssExtractor(content) {
 function stylepack(gulp, $, config) {
 
     const streams = config.styles.files.map((file) => {
-        let purgeCssConfig = config.styles.purgeCss;
+        // Set up PurgeCSS with external config
+        let purgeCssConfig = file.purgeCss ?? config.styles.purgeCss;
+        let purgeCssDisabled = argv.purgecss === false; // Check for CLI flags/args
+        let purgeCss = purgeCssConfig && !purgeCssDisabled; // Determine if PurgeCSS should run
 
-        // Check for CLI flags/args
-        let purgeCssDisabled = argv.purgecss === false;
-
-        // Determine if PurgeCSS should run
-        let purgeCss = purgeCssConfig && !purgeCssDisabled;
+        // Grab a PostCSS Preset Env config to use;
+        // always prefers a stylesheet-specific one over a global config for all CSS files
+        let postCssPresetEnvConfig = file.postCssPresetEnv || config.styles.postCssPresetEnv || '';
 
         const webpackConfig = {
             entry: `/${config.webdir}/${file.files}`,
@@ -61,7 +62,7 @@ function stylepack(gulp, $, config) {
                                     sourceMap: true,
                                     postcssOptions: {
                                         plugins: [
-                                            ["postcss-preset-env"],
+                                            ["postcss-preset-env", postCssPresetEnvConfig],
                                             purgeCss ? postcssPurgecss({
                                                 content: purgeCssConfig.content,
                                                 extractors: [
