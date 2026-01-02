@@ -26,13 +26,9 @@ function createMergedWebpackConfig(gulp, $, config) {
         entryCssMeta[entryName] = {
             destDir: file.destDir || '',
             filename: file.name,
-            purgeCssConfig: file.purgeCss ?? config.styles.purgeCss,
+            purgeCssConfig: file.purgeCss ?? config.styles.purgeCss ?? null,
             postCssPresetEnvConfig: file.postCssPresetEnv || config.styles.postCssPresetEnv || ''
         };
-
-        console.log('+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++');
-        console.log(Object.values(entryCssMeta[entryName]));
-        console.log('+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++');
     });
 
     // ---- JS entries ----
@@ -160,8 +156,8 @@ function createMergedWebpackConfig(gulp, $, config) {
                                                     }],
                                                     safelist: cssEntry.purgeCssConfig.safelist,
                                                 })]
-                                                : false),
-                                        ].filter(Boolean),
+                                                : []),
+                                        ],
                                     };
                                 },
                             },
@@ -194,15 +190,16 @@ function createMergedWebpackConfig(gulp, $, config) {
             new MiniCssExtractPlugin({
                 filename: (pathData) => {
                     const name = pathData.chunk && pathData.chunk.name ? pathData.chunk.name : '[name]';
+
                     if (name.startsWith('css_')) {
                         const meta = entryCssMeta[name];
-                        if (!meta) {
-                            return 'css/[name].css';
+                        if (meta) {
+                            const dir = meta.destDir ? meta.destDir.replace(/\/+$/, '') : 'css';
+                            return `${dir}/${meta.filename}`;
                         }
-                        const dir = meta.destDir ? meta.destDir.replace(/\/+$/, '') : 'css';
-                        return `${dir}/${meta.filename}`;
                     }
-                    // non‑CSS (or unexpected) chunks
+
+                    // fallback
                     return 'css/[name].css';
                 },
             }),

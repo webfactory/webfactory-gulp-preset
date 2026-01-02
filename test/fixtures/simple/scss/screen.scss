@@ -1,0 +1,12 @@
+:root {
+    --color-primary: blue;
+}
+
+.button {
+    display: flex;
+    color: var(--color-primary);
+
+    &--primary {
+        color: red;
+    }
+}
