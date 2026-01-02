@@ -132,12 +132,8 @@ function createMergedWebpackConfig(gulp, $, config) {
                             loader: 'postcss-loader',
                             options: {
                                 sourceMap: true,
-                                postcssOptions: (loaderContext) => {
-                                    // Determine which entry this SCSS belongs to
-                                    const resourcePath = loaderContext.file;
-                                    // crude mapping based on filename; you can refine this
-                                    const cssEntry = Object.values(entryCssMeta)[0] || {};
-
+                                postcssOptions: () => {
+                                    const cssEntry = Object.values(entryCssMeta)[0] || {}; // TODO: crude mapping based on filename; improve?
                                     const postCssPresetEnvConfig = cssEntry.postCssPresetEnvConfig || {};
 
                                     return {
