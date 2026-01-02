@@ -1,9 +1,7 @@
-// tasks/webpack-merged.js
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const postcssPurgecss = require('@fullhuman/postcss-purgecss');
 
-// Same extractor you already use
 function utilityCssExtractor(content) {
     return content.match(/[a-zA-Z0-9-_.:@\/]+/g);
 }
@@ -12,14 +10,15 @@ function createMergedWebpackConfig(gulp, $, config) {
     const argv = require('minimist')(process.argv.slice(2));
 
     const entry = {};
-    const entryCssMeta = {}; // keep per‑CSS file metadata to map entry -> destDir/name
+    const entryCssMeta = {};
 
     // ---- CSS entries ----
     (config.styles.files || []).forEach((file) => {
         // key must be unique and stable
         const entryName = `css_${file.name.replace(/[^a-zA-Z0-9_-]/g, '_')}`;
 
-        // assume single SCSS entry per style config
+        // TODO: the POC assumes a single SCSS entry per style config;
+        //  either make this iterable or switch to i.e. file.inputPath to make the behaviour clear
         const scssEntry = file.files[0];
 
         entry[entryName] = path.resolve(config.webdir, scssEntry);
@@ -57,7 +56,6 @@ function createMergedWebpackConfig(gulp, $, config) {
                     const cleanName = name.replace(/^js_/, '');
                     return `js/${cleanName}.js`;
                 }
-                // CSS chunks do not rely on this (MiniCssExtractPlugin will handle), but keep a fallback
                 return '[name].js';
             },
             path: path.resolve(config.webdir),
@@ -118,7 +116,7 @@ function createMergedWebpackConfig(gulp, $, config) {
                     }
                 },
 
-                // SCSS -> CSS (MiniCssExtractPlugin)
+                // SCSS -> CSS (via MiniCssExtractPlugin)
                 {
                     test: /\.s[ac]ss$/i,
                     use: [
