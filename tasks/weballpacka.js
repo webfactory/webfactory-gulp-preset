@@ -140,11 +140,9 @@ function createMergedWebpackConfig(gulp, $, config) {
 
                                     const postCssPresetEnvConfig = cssEntry.postCssPresetEnvConfig || {};
 
-                                    // IMPORTANT: do NOT set `browsers` here; let Browserslist from package.json be used
                                     return {
                                         plugins: [
                                             require('postcss-preset-env')(postCssPresetEnvConfig),
-                                            // PurgeCSS only if configured & not disabled
                                             ...(cssEntry.purgeCssConfig && !purgeCssDisabled
                                                 ? [postcssPurgecss({
                                                     content: cssEntry.purgeCssConfig.content,

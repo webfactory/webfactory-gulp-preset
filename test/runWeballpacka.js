@@ -53,11 +53,6 @@ async function buildWithConfig(partialGulpConfig) {
                     warnings: true
                 });
 
-                console.log('Webpack has errors:', !!jsonStats.errors.length);
-                console.log('Webpack has warnings:', !!jsonStats.warnings.length);
-                console.log('Entrypoints:', JSON.stringify(jsonStats.entrypoints, null, 2));
-                console.log('Modules processed:', jsonStats.modules.length);
-
                 if (stats.hasErrors()) {
                     console.log('ERROR details:', jsonStats.errors);
                     return reject(new Error(stats.toString({ all: false, errors: true })));
