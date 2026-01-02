@@ -1,4 +1,3 @@
-// test/runWebpackMerged.js
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -6,14 +5,11 @@ const { promisify } = require('util');
 const webpack = require('webpack'); // same version as your gulp preset
 const rimraf = promisify(require('rimraf'));
 
-// import your merged helper (not the gulp task wrapper)
 const { createMergedWebpackConfig } = require('../tasks/weballpacka');
-// your normal plugins helper
 const baseConfig = require('./gulp-config');
 const $ = require('../plugins')(baseConfig);
 
 async function buildWithConfig(partialGulpConfig) {
-    // create isolated output dir
     const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'webpack-merged-test-'));
 
     // merge base gulp-config with scenario‑specific overrides
@@ -23,8 +19,6 @@ async function buildWithConfig(partialGulpConfig) {
     };
 
     const webpackConfig = createMergedWebpackConfig(
-        // gulp param is not actually used in createMergedWebpackConfig,
-        // but if you need it, you can pass a tiny stub instead
         { /* gulp stub not needed here */ },
         $,
         testConfig
@@ -38,7 +32,7 @@ async function buildWithConfig(partialGulpConfig) {
         },
     };
 
-    const compiler = webpack(finalConfig); // Node API[web:41]
+    const compiler = webpack(finalConfig);
 
     await new Promise((resolve, reject) => {
         compiler.run((err, stats) => {
@@ -65,7 +59,6 @@ async function buildWithConfig(partialGulpConfig) {
     });
 
     // collect all emitted CSS files
-    // Replace the entire files collection block with:
     const files = {};
     function collectCss(dir) {
         fs.readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
