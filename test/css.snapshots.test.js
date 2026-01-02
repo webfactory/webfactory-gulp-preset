@@ -19,9 +19,6 @@ describe('webpackMerged CSS snapshots', () => {
             scripts: { files: [] }, // skip JS for this test
         });
 
-        console.log('All emitted files:', Object.keys(files)); // DEBUG
-        console.log('screen.css content:', files['css/screen.css']); // DEBUG
-
         expect(files['css/screen.css']).toMatchSnapshot('simple-screen-css');
     });
 
