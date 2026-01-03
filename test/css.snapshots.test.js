@@ -3,41 +3,50 @@ const path = require('path');
 const { buildWithConfig } = require('./runWeballpacka');
 
 describe('webpackMerged CSS snapshots', () => {
-    it('simple gulp-config', async () => {
+    it('base', async () => {
         const files = await buildWithConfig({
-            webdir: path.resolve(__dirname, './fixtures/simple'),
+            webdir: path.resolve(__dirname, './fixtures/base'),
             styles: {
                 files: [
                     {
                         name: 'screen.css',
                         files: ['scss/screen.scss'],
                         destDir: 'css',
-                        purgeCSS: false,
+                        purgeCss: false,
                     },
                 ],
             },
             scripts: { files: [] }, // skip JS for this test
-        }, 'simple');
+        }, 'base');
 
-        expect(files['css/screen.css']).toMatchSnapshot('simple-screen-css');
+        expect(files['css/screen.css']).toMatchSnapshot('base-screen-css');
     });
 
-    it('simple-too gulp-config', async () => {
+    it('purgecss', async () => {
         const files = await buildWithConfig({
-            webdir: path.resolve(__dirname, './fixtures/simple-too'),
+            webdir: path.resolve(__dirname, './fixtures/purgecss'),
             styles: {
                 files: [
                     {
                         name: 'screen.css',
                         files: ['scss/screen.scss'],
                         destDir: 'css',
-                        purgeCSS: false,
+                        purgeCss: {
+                            content: [
+                                'www/*.html.twig'
+                            ],
+                            safelist: {
+                                standard: [
+                                    'h2',
+                                ],
+                            },
+                        },
                     },
                 ],
             },
             scripts: { files: [] }, // skip JS for this test
-        }, 'simple-too');
+        }, 'purgecss');
 
-        expect(files['css/screen.css']).toMatchSnapshot('simple-too-screen-css');
+        expect(files['css/screen.css']).toMatchSnapshot('purgecss-screen-css');
     });
 });
