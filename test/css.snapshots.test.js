@@ -12,7 +12,6 @@ describe('webpackMerged CSS snapshots', () => {
                         name: 'screen.css',
                         files: ['scss/screen.scss'],
                         destDir: 'css',
-                        purgeCss: false,
                     },
                 ],
             },

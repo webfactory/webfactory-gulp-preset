@@ -1,5 +1,5 @@
 {
-    "name": "simple",
+    "name": "purgecss",
     "version": "1.0.0",
     "browserslist": [
         "extends browserslist-config-webfactory/default"
