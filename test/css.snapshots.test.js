@@ -17,7 +17,7 @@ describe('webpackMerged CSS snapshots', () => {
                 ],
             },
             scripts: { files: [] }, // skip JS for this test
-        });
+        }, 'simple');
 
         expect(files['css/screen.css']).toMatchSnapshot('simple-screen-css');
     });
@@ -36,7 +36,7 @@ describe('webpackMerged CSS snapshots', () => {
                 ],
             },
             scripts: { files: [] }, // skip JS for this test
-        });
+        }, 'simple-too');
 
         expect(files['css/screen.css']).toMatchSnapshot('simple-too-screen-css');
     });

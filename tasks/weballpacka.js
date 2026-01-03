@@ -26,7 +26,7 @@ function createMergedWebpackConfig(gulp, $, config) {
             destDir: file.destDir || '',
             filename: file.name,
             purgeCssConfig: file.purgeCss ?? config.styles.purgeCss ?? null,
-            postCssPresetEnvConfig: file.postCssPresetEnv || config.styles.postCssPresetEnv || ''
+            postCssPresetEnvConfig: file.postCssPresetEnv || config.styles.postCssPresetEnv || {},
         };
     });
 
