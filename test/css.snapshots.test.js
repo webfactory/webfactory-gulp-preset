@@ -49,4 +49,33 @@ describe('webpackMerged CSS snapshots', () => {
 
         expect(files['css/screen.css']).toMatchSnapshot('purgecss-screen-css');
     });
+
+    it('postcss-preset-env', async () => {
+        const files = await buildWithConfig({
+            webdir: path.resolve(__dirname, './fixtures/postcss-preset-env'),
+            styles: {
+                files: [
+                    {
+                        name: 'screen.css',
+                        files: ['scss/screen.scss'],
+                        destDir: 'css',
+                        postCssPresetEnv: {
+                            // Options for postcss-logical
+                            "logical": {
+                                "inlineDirection": "top-to-bottom",
+                                "blockDirection": "right-to-left"
+                            },
+                            browsers: [
+                                '>=0.25% in DE',
+                                'Chrome 56'
+                            ],
+                        },
+                    },
+                ],
+            },
+            scripts: { files: [] }, // skip JS for this test
+        }, 'postcss-preset-env');
+
+        expect(files['css/screen.css']).toMatchSnapshot('postcss-preset-env-screen-css');
+    });
 });
