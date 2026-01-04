@@ -1,0 +1,9 @@
+@media print {
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    div {
+        margin-block-start: 0;
+    }
+}

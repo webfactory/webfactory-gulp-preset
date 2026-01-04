@@ -8,6 +8,7 @@ function utilityCssExtractor(content) {
 
 function createMergedWebpackConfig(gulp, $, config) {
     const argv = require('minimist')(process.argv.slice(2));
+    const purgeCssDisabled = argv.purgecss === false;
 
     const entry = {};
     const entryCssMeta = {};
@@ -17,18 +18,16 @@ function createMergedWebpackConfig(gulp, $, config) {
         // key must be unique and stable
         const entryName = `css_${file.name.replace(/[^a-zA-Z0-9_-]/g, '_')}`;
 
-        // TODO: the POC assumes a single SCSS entry per style config;
-        //  either make this iterable or switch to i.e. file.inputPath to make the behaviour clear
-        const scssEntry = file.files[0];
-
-        entry[entryName] = path.resolve(config.webdir, scssEntry);
+        entry[entryName] = path.resolve(config.webdir, file.inputPath);
         entryCssMeta[entryName] = {
-            destDir: file.destDir || '',
+            destDir: file.destDir || 'css',
             filename: file.name,
+            inputPath: file.inputPath,
             purgeCssConfig: file.purgeCss ?? config.styles.purgeCss ?? null,
             postCssPresetEnvConfig: file.postCssPresetEnv || config.styles.postCssPresetEnv || {},
         };
     });
+
 
     // ---- JS entries ----
     let includeModules = config.scripts.includeModules ? '|' + config.scripts.includeModules.join('|') : '';
@@ -43,8 +42,6 @@ function createMergedWebpackConfig(gulp, $, config) {
         const entryName = `js_${script.name.replace(/[^a-zA-Z0-9_-]/g, '_')}`;
         entry[entryName] = path.resolve(config.webdir, script.inputPath);
     });
-
-    const purgeCssDisabled = argv.purgecss === false;
 
     const webpackConfig = {
         entry,
@@ -132,8 +129,26 @@ function createMergedWebpackConfig(gulp, $, config) {
                             loader: 'postcss-loader',
                             options: {
                                 sourceMap: true,
-                                postcssOptions: () => {
-                                    const cssEntry = Object.values(entryCssMeta)[0] || {}; // TODO: crude mapping based on filename; improve?
+                                postcssOptions: (loaderContext) => {
+                                    // Match resource path to entry path from entryCssMeta
+                                    const resourcePath = loaderContext.resourcePath;
+                                    let cssEntry = null;
+
+                                    for (const [entryName, meta] of Object.entries(entryCssMeta)) {
+                                        if (meta.inputPath && resourcePath.includes(meta.inputPath)) {
+                                            cssEntry = meta;
+                                            break;
+                                        }
+                                    }
+
+                                    if (!cssEntry) {
+                                        throw new Error(
+                                            `No CSS entry metadata found for resource: ${resourcePath}\n` +
+                                            `Available entries: ${Object.keys(entryCssMeta).join(', ')}\n` +
+                                            `Ensure the SCSS file is an exact webpack entry point from config.styles.files[].inputPath`
+                                        );
+                                    }
+
                                     const postCssPresetEnvConfig = cssEntry.postCssPresetEnvConfig || {};
 
                                     return {
