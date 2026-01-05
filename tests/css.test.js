@@ -25,7 +25,7 @@ describe('Compiling SCSS to CSS', () => {
         expect(files['css/print.css']).toMatchSnapshot('base-print-css');
     });
 
-    it('purgecss', async () => {
+    it('with purgecss', async () => {
         const files = await buildWithConfig({
             webdir: path.resolve(__dirname, './fixtures/css/purgecss'),
             styles: {
@@ -53,7 +53,7 @@ describe('Compiling SCSS to CSS', () => {
         expect(files['css/screen.css']).toMatchSnapshot('purgecss-screen-css');
     });
 
-    it('postcss-preset-env', async () => {
+    it('with custom per-file postcss-preset-env config', async () => {
         const files = await buildWithConfig({
             webdir: path.resolve(__dirname, './fixtures/css/postcss-preset-env'),
             styles: {
