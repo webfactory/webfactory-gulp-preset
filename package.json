@@ -1,12 +1,13 @@
 {
   "name": "webfactory-gulp-preset",
-  "version": "3.4.0",
+  "version": "3.6.0",
   "dependencies": {
-    "@babel/core": "^7.13.8",
-    "@babel/plugin-transform-runtime": "^7.25.9",
-    "@babel/preset-env": "^7.13.8",
+    "@babel/core": "^7.28.5",
+    "@babel/plugin-transform-runtime": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "@babel/runtime": "^7.28.4",
     "@fullhuman/postcss-purgecss": "^4.0.3",
-    "babel-loader": "^8.2.2",
+    "babel-loader": "^10.0.0",
     "browser-sync": "^2.26.7",
     "browserslist-config-webfactory": "^1.0.0",
     "css-loader": "^7.1.2",
@@ -36,7 +37,8 @@
     "stylelint-order": "^5.0.0",
     "terser": "^5.3.8",
     "through2": "^4.0.2",
-    "webpack": "^5.47.0",
+    "ts-loader": "^9.5.4",
+    "webpack": "^5.103.0",
     "webpack-stream": "^7.0.0"
   },
   "browserslist": [
