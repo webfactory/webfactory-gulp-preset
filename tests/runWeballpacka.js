@@ -9,10 +9,10 @@ const { createMergedWebpackConfig } = require('../tasks/weballpacka');
 const baseConfig = require('./gulp-config');
 const $ = require('../plugins')(baseConfig);
 
-async function buildWithConfig(partialGulpConfig, fixtureName) {
-    const fixtureRoot = fixtureName
-        ? path.resolve(__dirname, 'fixtures', fixtureName)
-        : path.resolve(__dirname, 'fixtures/simple'); // default
+async function buildWithConfig(partialGulpConfig, fixturePath) {
+    const fixtureRoot = fixturePath
+        ? path.resolve(__dirname, 'fixtures', fixturePath)
+        : path.resolve(__dirname, 'could-not-resolve-fixture-path'); // throws an error
 
     const prevCwd = process.cwd();
 

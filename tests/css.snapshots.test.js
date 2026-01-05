@@ -5,7 +5,7 @@ const { buildWithConfig } = require('./runWeballpacka');
 describe('webpackMerged CSS snapshots', () => {
     it('base', async () => {
         const files = await buildWithConfig({
-            webdir: path.resolve(__dirname, './fixtures/base'),
+            webdir: path.resolve(__dirname, './fixtures/css/base'),
             styles: {
                 files: [
                     {
@@ -19,7 +19,7 @@ describe('webpackMerged CSS snapshots', () => {
                 ],
             },
             scripts: { files: [] }, // skip JS for this test
-        }, 'base');
+        }, 'css/base');
 
         expect(files['css/screen.css']).toMatchSnapshot('base-screen-css');
         expect(files['css/print.css']).toMatchSnapshot('base-print-css');
@@ -27,7 +27,7 @@ describe('webpackMerged CSS snapshots', () => {
 
     it('purgecss', async () => {
         const files = await buildWithConfig({
-            webdir: path.resolve(__dirname, './fixtures/purgecss'),
+            webdir: path.resolve(__dirname, './fixtures/css/purgecss'),
             styles: {
                 files: [
                     {
@@ -48,14 +48,14 @@ describe('webpackMerged CSS snapshots', () => {
                 ],
             },
             scripts: { files: [] }, // skip JS for this test
-        }, 'purgecss');
+        }, 'css/purgecss');
 
         expect(files['css/screen.css']).toMatchSnapshot('purgecss-screen-css');
     });
 
     it('postcss-preset-env', async () => {
         const files = await buildWithConfig({
-            webdir: path.resolve(__dirname, './fixtures/postcss-preset-env'),
+            webdir: path.resolve(__dirname, './fixtures/css/postcss-preset-env'),
             styles: {
                 files: [
                     {
@@ -81,7 +81,7 @@ describe('webpackMerged CSS snapshots', () => {
                 ],
             },
             scripts: { files: [] }, // skip JS for this test
-        }, 'postcss-preset-env');
+        }, 'css/postcss-preset-env');
 
         expect(files['css/screen.css']).toMatchSnapshot('postcss-preset-env-screen-css');
         expect(files['css/print.css']).toMatchSnapshot('postcss-preset-env-print-css');
