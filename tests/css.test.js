@@ -2,7 +2,7 @@
 const path = require('path');
 const { buildWithConfig } = require('./runWeballpacka');
 
-describe('webpackMerged CSS snapshots', () => {
+describe('Compiling SCSS to CSS', () => {
     it('base', async () => {
         const files = await buildWithConfig({
             webdir: path.resolve(__dirname, './fixtures/css/base'),
