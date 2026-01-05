@@ -3,9 +3,9 @@ const path = require('path');
 const { buildWithConfig } = require('./runWeballpacka');
 
 describe('Compiling SCSS to CSS', () => {
-    it('base', async () => {
+    it('basic', async () => {
         const { files } = await buildWithConfig({
-            webdir: path.resolve(__dirname, './fixtures/css/base'),
+            webdir: path.resolve(__dirname, './fixtures/css/basic'),
             styles: {
                 files: [
                     {
@@ -19,10 +19,10 @@ describe('Compiling SCSS to CSS', () => {
                 ],
             },
             scripts: { files: [] }, // skip JS for this test
-        }, 'css/base');
+        }, 'css/basic');
 
-        expect(files['css/screen.css']).toMatchSnapshot('base-screen-css');
-        expect(files['css/print.css']).toMatchSnapshot('base-print-css');
+        expect(files['css/screen.css']).toMatchSnapshot('basic-screen-css');
+        expect(files['css/print.css']).toMatchSnapshot('basic-print-css');
     });
 
     it('with purgecss', async () => {

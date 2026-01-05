@@ -1,5 +1,5 @@
 {
-    "name": "basic",
+    "name": "jquery",
     "version": "1.0.0",
     "browserslist": [
         "extends browserslist-config-webfactory/default"
