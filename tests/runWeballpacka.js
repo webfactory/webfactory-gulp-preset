@@ -50,9 +50,9 @@ async function buildWithConfig(partialGulpConfig, fixturePath) {
             });
         });
 
-        // Collect CSS + assets
+        // Collect CSS/JS files + assets (images from url-rebasing)
         const files = {};
-        const assets = []; // Track emitted assets
+        const assets = [];
 
         function collectFiles(dir) {
             fs.readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
