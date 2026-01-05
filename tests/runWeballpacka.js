@@ -50,23 +50,39 @@ async function buildWithConfig(partialGulpConfig, fixturePath) {
             });
         });
 
-        // recursive CSS collection
+        // Collect CSS + assets
         const files = {};
-        function collectCss(dir) {
+        const assets = []; // Track emitted assets
+
+        function collectFiles(dir) {
             fs.readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
                 const fullPath = path.join(dir, entry.name);
                 if (entry.isDirectory()) {
-                    collectCss(fullPath);
-                } else if (entry.name.endsWith('.css')) {
+                    collectFiles(fullPath);
+                } else {
                     const relPath = path.relative(outDir, fullPath);
                     files[relPath] = fs.readFileSync(fullPath, 'utf8');
+
+                    // Track assets
+                    if (relPath.startsWith('assets/') || entry.name.match(/\.(png|jpg|gif|svg|webp)$/)) {
+                        assets.push({
+                            path: relPath,
+                            size: fs.statSync(fullPath).size,
+                            hashMatch: /\.[a-f0-9]{8,}/.test(entry.name) // Detect [hash]
+                        });
+                    }
                 }
             });
         }
-        collectCss(outDir);
 
+
+        collectFiles(outDir);
         await rimraf(outDir);
-        return files;
+
+        return {
+            files,
+            assets
+        };
     } finally {
         // restore original CWD
         process.chdir(prevCwd);
