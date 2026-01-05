@@ -63,7 +63,7 @@ function createMergedWebpackConfig(gulp, $, config) {
                     ? $.path.resolve('node_modules', 'svelte')
                     : $.path.resolve('node_modules', 'svelte/src/runtime')
             },
-            extensions: ['.mjs', '.js', '.svelte'],
+            extensions: ['.mjs', '.js', '.svelte', '.ts'],
             mainFields: ['svelte', 'browser', 'module', 'main'],
             modules: resolveModulesPaths,
         },
@@ -102,6 +102,11 @@ function createMergedWebpackConfig(gulp, $, config) {
                     resolve: {
                         fullySpecified: false,
                     }
+                },
+                {
+                    test: /\.tsx?$/,
+                    use: 'ts-loader',
+                    exclude: /node_modules/,
                 },
 
                 // Assets used from SCSS
