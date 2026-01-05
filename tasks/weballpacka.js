@@ -69,7 +69,7 @@ function createMergedWebpackConfig(gulp, $, config) {
         },
         module: {
             rules: [
-                // JS + Svelte
+                // JS + Svelte + Typescript
                 {
                     test: /(\.m?js?$)|(\.svelte$)/,
                     exclude: new RegExp('node_modules\\/(?![svelte' + includeModules + '])'),

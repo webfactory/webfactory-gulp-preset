@@ -2,7 +2,7 @@
 
 exports[`Compiling SCSS to CSS basic: basic-print-css 1`] = `
 "/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************!*\\
-  !*** css ../../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!../../../../node_modules/resolve-url-loader/index.js!../../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!../../../../node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[4]!./scss/print.scss ***!
+  !*** css ../../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!../../../../node_modules/resolve-url-loader/index.js!../../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!../../../../node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[4]!./scss/print.scss ***!
   \\***************************************************************************************************************************************************************************************************************************************************************************************************************************/
 @media print {
   a[href]:after {
@@ -14,7 +14,7 @@ exports[`Compiling SCSS to CSS basic: basic-print-css 1`] = `
 
 exports[`Compiling SCSS to CSS basic: basic-screen-css 1`] = `
 "/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************!*\\
-  !*** css ../../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!../../../../node_modules/resolve-url-loader/index.js!../../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!../../../../node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[4]!./scss/screen.scss ***!
+  !*** css ../../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!../../../../node_modules/resolve-url-loader/index.js!../../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!../../../../node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[4]!./scss/screen.scss ***!
   \\****************************************************************************************************************************************************************************************************************************************************************************************************************************/
 :root {
   --color-primary: blue;
@@ -36,7 +36,7 @@ div {
 
 exports[`Compiling SCSS to CSS with custom per-file postcss-preset-env config: postcss-preset-env-print-css 1`] = `
 "/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************!*\\
-  !*** css ../../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!../../../../node_modules/resolve-url-loader/index.js!../../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!../../../../node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[4]!./scss/print.scss ***!
+  !*** css ../../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!../../../../node_modules/resolve-url-loader/index.js!../../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!../../../../node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[4]!./scss/print.scss ***!
   \\***************************************************************************************************************************************************************************************************************************************************************************************************************************/
 @media print {
   a[href]:after {
@@ -51,7 +51,7 @@ exports[`Compiling SCSS to CSS with custom per-file postcss-preset-env config: p
 
 exports[`Compiling SCSS to CSS with custom per-file postcss-preset-env config: postcss-preset-env-screen-css 1`] = `
 "/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************!*\\
-  !*** css ../../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!../../../../node_modules/resolve-url-loader/index.js!../../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!../../../../node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[4]!./scss/screen.scss ***!
+  !*** css ../../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!../../../../node_modules/resolve-url-loader/index.js!../../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!../../../../node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[4]!./scss/screen.scss ***!
   \\****************************************************************************************************************************************************************************************************************************************************************************************************************************/
 div {
   height: 25ch;
@@ -62,7 +62,7 @@ div {
 
 exports[`Compiling SCSS to CSS with purgecss: purgecss-screen-css 1`] = `
 "/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************!*\\
-  !*** css ../../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!../../../../node_modules/resolve-url-loader/index.js!../../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!../../../../node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[4]!./scss/screen.scss ***!
+  !*** css ../../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!../../../../node_modules/resolve-url-loader/index.js!../../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].use[3]!../../../../node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[4]!./scss/screen.scss ***!
   \\****************************************************************************************************************************************************************************************************************************************************************************************************************************/
 h2 {
   font-size: 2rem;
