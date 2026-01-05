@@ -27,7 +27,7 @@ function webpack(gulp, $, config) {
                 alias: {
                     svelte: svelteVersion < 4 ? $.path.resolve('node_modules', 'svelte') : $.path.resolve('node_modules', 'svelte/src/runtime')
                 },
-                extensions: ['.mjs', '.js', '.svelte'],
+                extensions: ['.mjs', '.js', '.svelte', '.ts'],
                 mainFields: ['svelte', 'browser', 'module', 'main'],
                 modules: resolveModulesPaths,
             },
@@ -66,6 +66,11 @@ function webpack(gulp, $, config) {
                             fullySpecified: false
                         }
                     },
+                    {
+                        test: /\.tsx?$/,
+                        use: 'ts-loader',
+                        exclude: /node_modules/,
+                    }
                 ]
             },
             plugins: [
