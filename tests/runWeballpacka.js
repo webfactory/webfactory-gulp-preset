@@ -19,7 +19,7 @@ async function buildWithConfig(partialGulpConfig, fixturePath) {
     try {
         process.chdir(fixtureRoot);
 
-        const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'webpack-merged-test-'));
+        const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'weballpacka-test-'));
 
         // merge base gulp-config with scenario‑specific overrides
         const testConfig = {
