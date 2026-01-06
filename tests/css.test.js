@@ -86,6 +86,34 @@ describe('Compiling SCSS to CSS', () => {
         expect(files['css/screen.css']).toMatchSnapshot('postcss-preset-env-screen-css');
         expect(files['css/print.css']).toMatchSnapshot('postcss-preset-env-print-css');
     });
+
+    it('with imports from vendor bundles', async () => {
+        const { files } = await buildWithConfig({
+            webdir: path.resolve(__dirname, './fixtures/css/symlinked-bundles'),
+            styles: {
+                files: [
+                    {
+                        name: 'screen.css',
+                        inputPath: 'scss/screen.scss',
+                    },
+                    {
+                        name: 'print.css',
+                        inputPath: 'scss/print.scss',
+                    },
+                    {
+                        name: 'system.css',
+                        inputPath: 'www/bundles/webfactorysystembundle/public/scss/system.scss',
+                    },
+                ],
+                includePaths: ['node_modules', 'www/bundles'],
+            },
+            scripts: { files: [] }, // skip JS for this test
+        }, 'css/symlinked-bundles');
+
+        expect(files['css/screen.css']).toMatchSnapshot('symlinked-bundles-screen-css');
+        expect(files['css/print.css']).toMatchSnapshot('symlinked-bundles-print-css');
+        expect(files['css/system.css']).toMatchSnapshot('symlinked-bundles-system-css');
+    });
 });
 
 describe('Asset handling (hashing + URL rebasing)', () => {

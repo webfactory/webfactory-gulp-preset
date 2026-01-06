@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const postcssPurgecss = require('@fullhuman/postcss-purgecss');
 
@@ -22,7 +23,7 @@ function createMergedWebpackConfig(gulp, $, config) {
         entryCssMeta[entryName] = {
             destDir: file.destDir || 'css',
             filename: file.name,
-            inputPath: file.inputPath,
+            resolvedInputPath: path.resolve(config.webdir, file.inputPath),
             purgeCssConfig: file.purgeCss ?? config.styles.purgeCss ?? null,
             postCssPresetEnvConfig: file.postCssPresetEnv || config.styles.postCssPresetEnv || {},
         };
@@ -135,21 +136,27 @@ function createMergedWebpackConfig(gulp, $, config) {
                             options: {
                                 sourceMap: true,
                                 postcssOptions: (loaderContext) => {
-                                    // Match resource path to entry path from entryCssMeta
-                                    const resourcePath = loaderContext.resourcePath;
                                     let cssEntry = null;
 
+                                    // Resolve the real path of the resource (resolves symlinks)
+                                    let realResourcePath = fs.realpathSync(loaderContext.resourcePath);
+
                                     for (const [entryName, meta] of Object.entries(entryCssMeta)) {
-                                        if (meta.inputPath && resourcePath.includes(meta.inputPath)) {
-                                            cssEntry = meta;
-                                            break;
+                                        if (meta.resolvedInputPath) {
+                                            const realInputPath = fs.realpathSync(meta.resolvedInputPath);
+                                            if (realResourcePath === realInputPath) {
+                                                cssEntry = meta;
+                                                break;
+                                            }
                                         }
                                     }
 
                                     if (!cssEntry) {
                                         throw new Error(
                                             `No CSS entry metadata found for resource: ${resourcePath}\n` +
+                                            `Real path: ${realResourcePath}\n` +
                                             `Available entries: ${Object.keys(entryCssMeta).join(', ')}\n` +
+                                            `Entry paths: ${Object.values(entryCssMeta).map(m => m.resolvedInputPath).join(', ')}\n` +
                                             `Ensure the SCSS file is an exact webpack entry point from config.styles.files[].inputPath`
                                         );
                                     }
