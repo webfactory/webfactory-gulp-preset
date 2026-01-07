@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const postcssPurgecss = require('@fullhuman/postcss-purgecss');
 
 function utilityCssExtractor(content) {
@@ -199,11 +200,13 @@ function createMergedWebpackConfig(gulp, $, config) {
             ],
         },
         plugins: [
-            // jQuery globals for JS, as before
             new $.webpack.ProvidePlugin({
                 $: 'jquery',
                 jQuery: 'jquery',
             }),
+
+            // Removes empty `.js` files left over by MiniCssExtractPlugin
+            new RemoveEmptyScriptsPlugin(),
 
             // CSS extraction with per‑entry filenames
             new MiniCssExtractPlugin({
