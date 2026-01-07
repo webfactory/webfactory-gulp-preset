@@ -189,9 +189,11 @@ function createMergedWebpackConfig(gulp, $, config) {
                                 api: 'modern',
                                 sourceMap: true,
                                 sassOptions: {
-                                    loadPaths: config.styles.includePaths
-                                        ? config.styles.includePaths
-                                        : [config.npmdir],
+                                    loadPaths: [...new Set([
+                                        ...(config.styles.includePaths || []),
+                                        config.npmdir,
+                                        'www/bundles'
+                                    ])],
                                 },
                             },
                         },
