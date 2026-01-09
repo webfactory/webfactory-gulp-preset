@@ -102,7 +102,7 @@ describe('Compiling SCSS to CSS', () => {
                     },
                     {
                         name: 'system.css',
-                        inputPath: 'www/bundles/webfactorysystembundle/public/scss/system.scss',
+                        inputPath: 'www/bundles/webfactorysystem/scss/system.scss',
                     },
                 ],
                 includePaths: ['node_modules', 'www/bundles'],
