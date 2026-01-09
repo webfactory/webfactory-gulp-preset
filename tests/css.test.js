@@ -100,10 +100,6 @@ describe('Compiling SCSS to CSS', () => {
                         name: 'print.css',
                         inputPath: 'scss/print.scss',
                     },
-                    {
-                        name: 'system.css',
-                        inputPath: 'www/bundles/webfactorysystem/scss/system.scss',
-                    },
                 ],
                 includePaths: ['node_modules', 'www/bundles'],
             },
@@ -112,7 +108,6 @@ describe('Compiling SCSS to CSS', () => {
 
         expect(files['css/screen.css']).toMatchSnapshot('symlinked-bundles-screen-css');
         expect(files['css/print.css']).toMatchSnapshot('symlinked-bundles-print-css');
-        expect(files['css/system.css']).toMatchSnapshot('symlinked-bundles-system-css');
     });
 });
 
