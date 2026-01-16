@@ -1,9 +1,8 @@
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const { promisify } = require('util');
+const { rm } = require('node:fs/promises');
 const webpack = require('webpack');
-const rimraf = promisify(require('rimraf'));
 
 const { createMergedWebpackConfig } = require('../tasks/weballpacka');
 const baseConfig = require('./gulp-config');
@@ -77,7 +76,10 @@ async function buildWithConfig(partialGulpConfig, fixturePath) {
 
 
         collectFiles(outDir);
-        await rimraf(outDir);
+        await rm(outDir, {
+            recursive: true,
+            force: true,
+        });
 
         return {
             files,
