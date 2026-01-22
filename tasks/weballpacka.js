@@ -11,6 +11,8 @@ function utilityCssExtractor(content) {
 function createMergedWebpackConfig(gulp, $, config) {
     const argv = require('minimist')(process.argv.slice(2));
     const purgeCssDisabled = argv.purgecss === false;
+    const isDevServer = process.argv.includes('serve') || process.env.WEBPACK_SERVE === 'true';
+    const isDev = config.development && argv.prod !== true;
 
     const entry = {};
     const entryCssMeta = {};
@@ -45,6 +47,14 @@ function createMergedWebpackConfig(gulp, $, config) {
         entry[entryName] = path.resolve(config.webdir, script.inputPath);
     });
 
+    // ---- Dev Server Configuration ----
+    const devServerPort = 3000;
+    const devServerHost = config.proxyUrl || 'localhost';
+    const devServerPublicPath = `http://${devServerHost}:${devServerPort}/`;
+
+    // Watch paths for PHP/Twig files (triggers full reload)
+    const watchPaths = config.watchPaths;
+
     const webpackConfig = {
         entry,
         output: {
@@ -58,6 +68,8 @@ function createMergedWebpackConfig(gulp, $, config) {
                 return '[name].js';
             },
             path: path.resolve(config.webdir),
+            // Important: set publicPath for HMR to work correctly
+            publicPath: isDevServer ? devServerPublicPath : '/',
         },
         resolve: {
             alias: {
@@ -68,6 +80,10 @@ function createMergedWebpackConfig(gulp, $, config) {
             extensions: ['.mjs', '.js', '.svelte', '.ts'],
             mainFields: ['svelte', 'browser', 'module', 'main'],
             modules: resolveModulesPaths,
+        },
+        watchOptions: {
+            poll: 1000,
+            ignored: /node_modules/,
         },
         module: {
             rules: [
@@ -94,6 +110,8 @@ function createMergedWebpackConfig(gulp, $, config) {
                             options: {
                                 cacheDirectory: true,
                                 emitCss: false,
+                                // Enable HMR for Svelte components
+                                hotReload: isDevServer && isDev,
                             },
                         },
                     ],
@@ -154,7 +172,7 @@ function createMergedWebpackConfig(gulp, $, config) {
 
                                     if (!cssEntry) {
                                         throw new Error(
-                                            `No CSS entry metadata found for resource: ${resourcePath}\n` +
+                                            `No CSS entry metadata found for resource: ${loaderContext.resourcePath}\n` +
                                             `Real path: ${realResourcePath}\n` +
                                             `Available entries: ${Object.keys(entryCssMeta).join(', ')}\n` +
                                             `Entry paths: ${Object.values(entryCssMeta).map(m => m.resolvedInputPath).join(', ')}\n` +
@@ -228,8 +246,44 @@ function createMergedWebpackConfig(gulp, $, config) {
                 },
             }),
         ],
-        mode: config.development && $.argv.prod !== true ? 'development' : 'production',
-        devtool: $.argv.debug === true ? 'source-map' : false,
+
+        // ---- Dev Server ----
+        devServer: {
+            hot: false,
+            liveReload: true,
+            host: devServerHost,
+            port: devServerPort,
+            allowedHosts: 'all',
+
+            // Allow connections from your PHP server
+            allowedHosts: 'all',
+
+            // Watch PHP/Twig files for full page reload
+            watchFiles: {
+                paths: watchPaths,
+                options: {
+                    usePolling: false,
+                    ignored: /node_modules/,
+                    followSymlinks: true,
+                },
+            },
+
+            // Client overlay for errors
+            client: {
+                overlay: {
+                    errors: true,
+                    warnings: false,
+                },
+                progress: true,
+                webSocketURL: {
+                    hostname: devServerHost,
+                    port: 3000,
+                },
+            },
+        },
+
+        mode: isDev ? 'development' : 'production',
+        devtool: $.argv.debug === true ? 'source-map' : (isDev ? 'eval-source-map' : false),
         stats: {
             preset: 'normal',
             timings: true,
@@ -239,15 +293,38 @@ function createMergedWebpackConfig(gulp, $, config) {
     return webpackConfig;
 }
 
+/**
+ * Gulp task for production builds (no dev server)
+ */
 function webpackMerged(gulp, $, config) {
     const webpackStream = require('webpack-stream');
     const webpack = $.webpack;
 
+    const webpackConfig = createMergedWebpackConfig(gulp, $, config);
+    // Remove devServer from gulp builds
+    delete webpackConfig.devServer;
+
     return gulp.src(config.webdir + '/**/*.{js,scss}')
-        .pipe(webpackStream(createMergedWebpackConfig(gulp, $, config), webpack))
-        .pipe(gulp.dest(config.webdir))
-        .pipe($.browserSync.reload({ stream: true }));
+        .pipe(webpackStream(webpackConfig, webpack))
+        .pipe(gulp.dest(config.webdir));
+}
+
+/**
+ * Start webpack-dev-server for development with LiveReload
+ */
+function webpackServe(gulp, $, config, done) {
+    const webpack = $.webpack;
+    const WebpackDevServer = require('webpack-dev-server');
+
+    const webpackConfig = createMergedWebpackConfig(gulp, $, config);
+    const compiler = webpack(webpackConfig);
+
+    const devServerOptions = webpackConfig.devServer;
+    const server = new WebpackDevServer(devServerOptions, compiler);
+
+    server.start();
 }
 
 exports.webpackMerged = webpackMerged;
 exports.createMergedWebpackConfig = createMergedWebpackConfig;
+exports.webpackServe = webpackServe;
