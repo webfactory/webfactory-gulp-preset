@@ -39,6 +39,7 @@
     "through2": "^4.0.2",
     "ts-loader": "^9.5.4",
     "webpack": "^5.103.0",
+    "webpack-dev-server": "^5.2.3",
     "webpack-remove-empty-scripts": "^1.1.1",
     "webpack-stream": "^7.0.0"
   },
