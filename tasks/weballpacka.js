@@ -68,8 +68,6 @@ function createMergedWebpackConfig(gulp, $, config) {
                 return '[name].js';
             },
             path: path.resolve(config.webdir),
-            // Important: set publicPath for HMR to work correctly
-            publicPath: isDevServer ? devServerPublicPath : '/',
         },
         resolve: {
             alias: {
