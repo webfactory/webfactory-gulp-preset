@@ -4,7 +4,7 @@ const os = require('os');
 const { rm } = require('node:fs/promises');
 const webpack = require('webpack');
 
-const { createMergedWebpackConfig } = require('../tasks/weballpacka');
+const { _config } = require('../tasks/weballpacka');
 const baseConfig = require('./gulp-config');
 const $ = require('../plugins')(baseConfig);
 
@@ -27,7 +27,7 @@ async function buildWithConfig(partialGulpConfig, fixturePath) {
             ...partialGulpConfig,
         };
 
-        const webpackConfig = createMergedWebpackConfig({}, $, testConfig);
+        const webpackConfig = _config({}, $, testConfig);
         webpackConfig.output = { ...webpackConfig.output, path: outDir };
 
         const compiler = webpack(webpackConfig);
@@ -73,7 +73,6 @@ async function buildWithConfig(partialGulpConfig, fixturePath) {
                 }
             });
         }
-
 
         collectFiles(outDir);
         await rm(outDir, {

@@ -262,4 +262,4 @@ function watch(gulp, $, config) {
 
 exports.compile = compile;
 exports.watch = watch;
-exports.config = webpackConfig;
+exports._config = webpackConfig;
