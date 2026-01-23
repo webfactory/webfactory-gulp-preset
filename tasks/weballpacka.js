@@ -8,7 +8,7 @@ function utilityCssExtractor(content) {
     return content.match(/[a-zA-Z0-9-_.:@\/]+/g);
 }
 
-function createMergedWebpackConfig(gulp, $, config) {
+function webpackConfig(gulp, $, config) {
     const argv = require('minimist')(process.argv.slice(2));
     const purgeCssDisabled = argv.purgecss === false;
 
@@ -239,22 +239,20 @@ function createMergedWebpackConfig(gulp, $, config) {
     return webpackConfig;
 }
 
-function webpackMerged(gulp, $, config) {
+function compile(gulp, $, config) {
     const webpackStream = require('webpack-stream');
     const webpack = $.webpack;
 
     return gulp.src(config.webdir + '/**/*.{js,scss}')
-        .pipe(webpackStream(createMergedWebpackConfig(gulp, $, config), webpack))
+        .pipe(webpackStream(webpackConfig(gulp, $, config), webpack))
         .pipe(gulp.dest(config.webdir))
         .pipe($.browserSync.reload({ stream: true }));
 }
 
-function webpackWatch(gulp, $, config) {
+function watch(gulp, $, config) {
     const webpack = $.webpack;
 
-    const webpackConfig = createMergedWebpackConfig(gulp, $, config);
-
-    webpack(webpackConfig).watch({
+    webpack(webpackConfig(gulp, $, config)).watch({
         poll: 1000,  // For Vagrant
         ignored: /node_modules/,
     }, (err, stats) => {
@@ -262,6 +260,6 @@ function webpackWatch(gulp, $, config) {
     });
 }
 
-exports.webpackMerged = webpackMerged;
-exports.webpackWatch = webpackWatch;
-exports.createMergedWebpackConfig = createMergedWebpackConfig;
+exports.compile = compile;
+exports.watch = watch;
+exports.config = webpackConfig;
