@@ -249,5 +249,19 @@ function webpackMerged(gulp, $, config) {
         .pipe($.browserSync.reload({ stream: true }));
 }
 
+function webpackWatch(gulp, $, config) {
+    const webpack = $.webpack;
+
+    const webpackConfig = createMergedWebpackConfig(gulp, $, config);
+
+    webpack(webpackConfig).watch({
+        poll: 1000,  // For Vagrant
+        ignored: /node_modules/,
+    }, (err, stats) => {
+        console.log(stats.toString({ colors: true }));
+    });
+}
+
 exports.webpackMerged = webpackMerged;
+exports.webpackWatch = webpackWatch;
 exports.createMergedWebpackConfig = createMergedWebpackConfig;
