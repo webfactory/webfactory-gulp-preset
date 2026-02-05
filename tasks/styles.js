@@ -1,4 +1,8 @@
+const argv = require('minimist')(process.argv.slice(2));
 function styles(gulp, $, config) {
+    // Check for CLI flags --no-deprecations
+    let silenceSassDeprecations = argv.deprecations === false;
+
     // take the array and map over each script config object in it
     const tasks = config.styles.files.map((stylesheet) => {
         let func = (done) => {
@@ -14,7 +18,8 @@ function styles(gulp, $, config) {
                     cwd: config.webdir,
                     pipeStdout: true,
                     sassOutputStyle: 'nested',
-                    includePaths: config.styles.includePaths ? config.styles.includePaths : [config.npmdir]
+                    includePaths: config.styles.includePaths ? config.styles.includePaths : [config.npmdir],
+                    silenceDeprecations: silenceSassDeprecations ? ['legacy-js-api', 'import', 'slash-div', 'if-function', 'color-functions', 'global-builtin'] : [],
                 }).on('error', function(error) {
                     console.error('Sass Error:', error.messageFormatted);
                     process.exitCode = 1;
