@@ -1,0 +1,18 @@
+@use 'webfactorytestbundle/scss/screen' as *;
+
+:root {
+    --color-primary: blue;
+}
+
+.button {
+    display: flex;
+    color: var(--color-primary);
+
+    &--primary {
+        color: red;
+    }
+}
+
+div {
+    margin-inline-start: 1rem;
+}

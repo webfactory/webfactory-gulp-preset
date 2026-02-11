@@ -1,0 +1,16 @@
+// PurgeCSS should remove this
+h1 {
+    font-size: 3rem;
+}
+
+// PurgeCSS should keep this
+
+// safelist
+h2 {
+    font-size: 2rem;
+}
+
+// used in test.html.twig
+.purgecss-should-not-remove {
+    background-color: red;
+}
