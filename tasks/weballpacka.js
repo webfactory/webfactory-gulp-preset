@@ -119,6 +119,13 @@ function webpackConfig(gulp, $, config) {
                         filename: 'img/[name].[hash][ext]'
                     }
                 },
+                {
+                    test: /\.(woff?2)$/i,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: 'fonts/[name].[hash][ext]'
+                    }
+                },
 
                 // SCSS -> CSS (via MiniCssExtractPlugin)
                 {
