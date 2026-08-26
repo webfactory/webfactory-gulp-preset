@@ -83,4 +83,127 @@ describe('Bundling JS', () => {
         expect(jsContent).toContain('window.testFlag=!0');
         expect(jsContent).not.toContain('mySimpleAdditionFunction');
     });
+
+    it('with asset hashing and URL rebasing', async () => {
+        const { files, assets } = await buildWithConfig({
+            webdir: path.resolve(__dirname, './fixtures/js/url-rebasing-assets'),
+            styles: { files: [] }, // Skip CSS
+            scripts: {
+                files: [{
+                    name: 'main',
+                    inputPath: 'js/main.js'
+                }]
+            }
+        }, 'js/url-rebasing-assets');
+
+        const jsContent = files['js/main.js'];
+
+        const icon = assets.find(a => a.path.includes('icon'));
+        expect(icon).toBeDefined();
+        expect(icon.hashMatch).toBe(true);
+
+        expect(jsContent).toMatch(/img\/icon\.[a-f0-9]{8,}\.svg/);
+    });
+
+    it('with imports from vendor bundles', async () => {
+        const { files } = await buildWithConfig({
+            webdir: path.resolve(__dirname, './fixtures/js/symlinked-bundles'),
+            styles: { files: [] }, // Skip CSS
+            scripts: {
+                files: [{
+                    name: 'main',
+                    inputPath: 'js/main.js'
+                }],
+                resolveModulesPaths: ['www/bundles'],
+            }
+        }, 'js/symlinked-bundles');
+
+        const jsContent = files['js/main.js'];
+
+        expect(jsContent).toContain('hello from bundle');
+    });
+
+    it('excludes node_modules from transpilation by default', async () => {
+        const { files } = await buildWithConfig({
+            webdir: path.resolve(__dirname, './fixtures/js/include-modules'),
+            styles: { files: [] }, // Skip CSS
+            scripts: {
+                files: [{
+                    name: 'main',
+                    inputPath: 'js/main.js'
+                }]
+            }
+        }, 'js/include-modules');
+
+        const jsContent = files['js/main.js'];
+
+        expect(jsContent).toContain('=>');
+        expect(jsContent).toContain('const');
+    });
+
+    it('with includeModules, transpiles the whitelisted node_modules package', async () => {
+        const { files } = await buildWithConfig({
+            webdir: path.resolve(__dirname, './fixtures/js/include-modules'),
+            styles: { files: [] }, // Skip CSS
+            scripts: {
+                files: [{
+                    name: 'main',
+                    inputPath: 'js/main.js'
+                }],
+                includeModules: ['moderndep'],
+            }
+        }, 'js/include-modules');
+
+        const jsContent = files['js/main.js'];
+
+        expect(jsContent).not.toContain('=>');
+        expect(jsContent).not.toContain('const');
+    });
+
+    it('with TypeScript', async () => {
+        const { files } = await buildWithConfig({
+            webdir: path.resolve(__dirname, './fixtures/js/typescript'),
+            styles: { files: [] }, // Skip CSS
+            scripts: {
+                files: [{
+                    name: 'main',
+                    inputPath: 'js/main.ts'
+                }]
+            }
+        }, 'js/typescript');
+
+        const jsContent = files['js/main.js'];
+
+        // types get stripped
+        expect(jsContent).not.toContain('interface');
+        expect(jsContent).not.toContain(': number');
+
+        // logic survives compilation
+        expect(jsContent).toContain('add(');
+        expect(jsContent).toContain('x + p.y');
+    });
+
+    it('with Svelte components', async () => {
+        const { files } = await buildWithConfig({
+            svelteVersion: '4',
+            webdir: path.resolve(__dirname, './fixtures/js/svelte'),
+            styles: { files: [] }, // Skip CSS
+            scripts: {
+                files: [{
+                    name: 'main',
+                    inputPath: 'js/main.js'
+                }]
+            }
+        }, 'js/svelte');
+
+        const jsContent = files['js/main.js'];
+
+        // template markup is compiled away, not passed through verbatim
+        expect(jsContent).not.toContain('<h1>Hello {name}!</h1>');
+
+        // static template pieces and compiled component internals are present
+        expect(jsContent).toContain('Hello ');
+        expect(jsContent).toContain('create_fragment');
+        expect(jsContent).toContain('SvelteComponent');
+    });
 });

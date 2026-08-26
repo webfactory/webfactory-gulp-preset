@@ -1,2 +1,11 @@
 node_modules
 yarn-error.log
+
+# Fixture content that must be tracked despite living under a `node_modules/`
+# directory, needed to exercise real node_modules resolution/exclusion
+# behavior in tests/js.test.js
+!tests/fixtures/js/include-modules/node_modules/
+!tests/fixtures/js/include-modules/node_modules/moderndep/
+!tests/fixtures/js/include-modules/node_modules/moderndep/**
+!tests/fixtures/js/svelte/node_modules/
+!tests/fixtures/js/svelte/node_modules/svelte
