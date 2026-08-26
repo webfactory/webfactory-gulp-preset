@@ -1,0 +1,7 @@
+{
+    "name": "legacy-transpilation-babel",
+    "version": "1.0.0",
+    "browserslist": [
+        "ie 11"
+    ]
+}

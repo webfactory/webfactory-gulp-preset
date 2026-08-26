@@ -1,0 +1,7 @@
+{
+    "name": "js-vendor-imports",
+    "version": "1.0.0",
+    "browserslist": [
+        "extends browserslist-config-webfactory/default"
+    ]
+}

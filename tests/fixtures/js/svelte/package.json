@@ -1,0 +1,7 @@
+{
+    "name": "js-svelte",
+    "version": "1.0.0",
+    "browserslist": [
+        "extends browserslist-config-webfactory/default"
+    ]
+}
